@@ -2,9 +2,22 @@
 
 **Secure CipherStegno Tool** is an advanced privacy-focused application that combines **cryptography** and **steganography** to securely encrypt and embed sensitive information into images or audio files — all processed **locally** to ensure maximum security and data integrity .
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/parththakar004/Secure-CipherStegno-Tool/blob/main/LICENSE)
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-blue)
-![Python](https://img.shields.io/badge/python-3.8%2B-yellow)
+![License](https://img.shields.io/github/license/parththakar2003/Secure-CipherStegno-Tool?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/parththakar2003/Secure-CipherStegno-Tool?style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/parththakar2003/Secure-CipherStegno-Tool?style=for-the-badge)
+![Issues](https://img.shields.io/github/issues/parththakar2003/Secure-CipherStegno-Tool?style=for-the-badge)
+![Pull Requests](https://img.shields.io/github/issues-pr/parththakar2003/Secure-CipherStegno-Tool?style=for-the-badge)
+
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)
+![GUI](https://img.shields.io/badge/GUI-Tkinter-red?style=for-the-badge)
+![Crypto](https://img.shields.io/badge/Cryptography-AES%20%7C%20RSA-darkgreen?style=for-the-badge)
+![Steganography](https://img.shields.io/badge/Steganography-Image%20%7C%20Audio-purple?style=for-the-badge)
+![Privacy](https://img.shields.io/badge/Privacy-Local%20Only-black?style=for-the-badge)
+
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey?style=for-the-badge)
+![Security](https://img.shields.io/badge/Focus-Cybersecurity-critical?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Active%20Development-success?style=for-the-badge)
+
 
 ---
 
