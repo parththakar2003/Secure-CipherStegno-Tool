@@ -8,10 +8,12 @@ pip install -r requirements.txt
 
 ## GUI Application
 
-Run the graphical interface:
+Run the enhanced graphical interface:
 ```bash
-python index.py
+python app.py
 ```
+
+> **Note:** The legacy GUI (`index.py`) is deprecated but still functional. It will redirect to `app.py` automatically.
 
 ## Command Line Interface
 
