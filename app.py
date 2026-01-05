@@ -261,15 +261,15 @@ class SecureCipherStegnoApp:
             label_text = "Key:" if algo in ['vigenere', 'playfair'] else "Password:"
             tk.Label(window, text=label_text, font=("Arial", 11),
                     bg="white").pack(pady=5)
-            show_char = "" if algo in ['vigenere', 'playfair'] else "*"
-            password_entry = tk.Entry(window, font=("Arial", 11), show=show_char, width=40)
+            # Mask all keys/passwords for security
+            password_entry = tk.Entry(window, font=("Arial", 11), show="*", width=40)
             password_entry.pack(pady=5)
         elif algo in ['caesar', 'railfence']:
             label_text = "Shift Value:" if algo == 'caesar' else "Number of Rails:"
             tk.Label(window, text=label_text, font=("Arial", 11),
                     bg="white").pack(pady=5)
             password_entry = tk.Entry(window, font=("Arial", 11), width=20)
-            password_entry.insert(0, "3")
+            # No default value - require explicit user input for security
             password_entry.pack(pady=5)
         
         # Output text
@@ -358,7 +358,7 @@ class SecureCipherStegnoApp:
                     output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
                     output_text.insert(tk.END, f"IV: {result['iv']}")
                     
-                    messagebox.showinfo("Success", "Text encrypted with 3DES!\n\n⚠️ Note: 3DES is legacy. Consider using AES.")
+                    messagebox.showwarning("Security Warning", "Text encrypted with 3DES.\n\n⚠️ WARNING: 3DES is LEGACY and has known vulnerabilities.\n\nPlease consider using AES-256 instead for better security!")
                 
                 elif algo == 'chacha20':
                     password = password_entry.get()
@@ -435,15 +435,15 @@ class SecureCipherStegnoApp:
             label_text = "Key:" if algo in ['vigenere', 'playfair'] else "Password:"
             tk.Label(window, text=label_text, font=("Arial", 11),
                     bg="white").pack(pady=5)
-            show_char = "" if algo in ['vigenere', 'playfair'] else "*"
-            password_entry = tk.Entry(window, font=("Arial", 11), show=show_char, width=40)
+            # Mask all keys/passwords for security
+            password_entry = tk.Entry(window, font=("Arial", 11), show="*", width=40)
             password_entry.pack(pady=5)
         elif algo in ['caesar', 'railfence']:
             label_text = "Shift Value:" if algo == 'caesar' else "Number of Rails:"
             tk.Label(window, text=label_text, font=("Arial", 11),
                     bg="white").pack(pady=5)
             password_entry = tk.Entry(window, font=("Arial", 11), width=20)
-            password_entry.insert(0, "3")
+            # No default value - require explicit user input for security
             password_entry.pack(pady=5)
         
         # Output text
