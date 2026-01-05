@@ -39,8 +39,10 @@ from tkinter import ttk, messagebox, filedialog, scrolledtext
 # Add src to path
 sys.path.insert(0, os.path.dirname(__file__))
 
-from src.crypto import CaesarCipher, AESCipher, RSACipher
-from src.steganography import ImageSteganography, AudioSteganography
+from src.crypto import (CaesarCipher, AESCipher, RSACipher, VigenereCipher,
+                        PlayfairCipher, RailFenceCipher, BlowfishCipher,
+                        DES3Cipher, ChaCha20Cipher)
+from src.steganography import ImageSteganography, AudioSteganography, VideoSteganography
 from src.utils import PasswordValidator, calculate_file_hash, Logger
 
 
@@ -127,10 +129,33 @@ class SecureCipherStegnoApp:
         
         self.crypto_algo = tk.StringVar(value="aes")
         
+        # Classical Ciphers
+        tk.Label(algo_frame, text="Classical Ciphers:", font=("Arial", 10, "bold"), 
+                bg="white", fg="#666").pack(anchor=tk.W, pady=(0, 5))
         tk.Radiobutton(algo_frame, text="Caesar Cipher (Simple)", variable=self.crypto_algo,
                       value="caesar", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="Vigenère Cipher (Keyword)", variable=self.crypto_algo,
+                      value="vigenere", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="Playfair Cipher (Digraph)", variable=self.crypto_algo,
+                      value="playfair", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="Rail Fence Cipher (Transposition)", variable=self.crypto_algo,
+                      value="railfence", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        
+        # Modern Symmetric Encryption
+        tk.Label(algo_frame, text="Modern Symmetric Encryption:", font=("Arial", 10, "bold"),
+                bg="white", fg="#666").pack(anchor=tk.W, pady=(10, 5))
         tk.Radiobutton(algo_frame, text="AES-256 (Recommended)", variable=self.crypto_algo,
                       value="aes", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="Blowfish (Fast)", variable=self.crypto_algo,
+                      value="blowfish", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="3DES (Legacy)", variable=self.crypto_algo,
+                      value="3des", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="ChaCha20 (Modern)", variable=self.crypto_algo,
+                      value="chacha20", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        
+        # Asymmetric Encryption
+        tk.Label(algo_frame, text="Asymmetric Encryption:", font=("Arial", 10, "bold"),
+                bg="white", fg="#666").pack(anchor=tk.W, pady=(10, 5))
         tk.Radiobutton(algo_frame, text="RSA (Public Key)", variable=self.crypto_algo,
                       value="rsa", font=("Arial", 11), bg="white").pack(anchor=tk.W)
         
@@ -162,6 +187,9 @@ class SecureCipherStegnoApp:
                       font=("Arial", 11), bg="white").pack(anchor=tk.W)
         tk.Radiobutton(type_frame, text="🎵 Audio Steganography (WAV)",
                       variable=self.stego_type, value="audio",
+                      font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(type_frame, text="🎬 Video Steganography (MP4, AVI)",
+                      variable=self.stego_type, value="video",
                       font=("Arial", 11), bg="white").pack(anchor=tk.W)
         
         # Options
@@ -218,7 +246,7 @@ class SecureCipherStegnoApp:
         # Create encryption window
         window = tk.Toplevel(self.root)
         window.title(f"Encrypt with {algo.upper()}")
-        window.geometry("600x500")
+        window.geometry("600x550")
         window.configure(bg="white")
         
         # Input text
@@ -227,11 +255,21 @@ class SecureCipherStegnoApp:
         input_text = scrolledtext.ScrolledText(window, height=8, font=("Arial", 11))
         input_text.pack(padx=20, pady=5, fill=tk.BOTH, expand=True)
         
-        # Password/Key input
-        if algo in ['aes', 'caesar']:
-            tk.Label(window, text="Password/Shift:", font=("Arial", 11),
+        # Password/Key input - conditional based on algorithm
+        password_entry = None
+        if algo in ['aes', 'blowfish', '3des', 'chacha20', 'vigenere', 'playfair']:
+            label_text = "Key:" if algo in ['vigenere', 'playfair'] else "Password:"
+            tk.Label(window, text=label_text, font=("Arial", 11),
                     bg="white").pack(pady=5)
-            password_entry = tk.Entry(window, font=("Arial", 11), show="*" if algo == 'aes' else "")
+            show_char = "" if algo in ['vigenere', 'playfair'] else "*"
+            password_entry = tk.Entry(window, font=("Arial", 11), show=show_char, width=40)
+            password_entry.pack(pady=5)
+        elif algo in ['caesar', 'railfence']:
+            label_text = "Shift Value:" if algo == 'caesar' else "Number of Rails:"
+            tk.Label(window, text=label_text, font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            password_entry = tk.Entry(window, font=("Arial", 11), width=20)
+            password_entry.insert(0, "3")
             password_entry.pack(pady=5)
         
         # Output text
@@ -247,12 +285,42 @@ class SecureCipherStegnoApp:
                 return
             
             try:
+                # Classical Ciphers
                 if algo == 'caesar':
                     shift = int(password_entry.get() or 3)
                     result = CaesarCipher.encrypt(text, shift)
                     output_text.delete("1.0", tk.END)
                     output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", f"Text encrypted with Caesar cipher (shift={shift})")
                 
+                elif algo == 'vigenere':
+                    key = password_entry.get()
+                    if not key:
+                        messagebox.showwarning("Input Error", "Please enter encryption key")
+                        return
+                    result = VigenereCipher.encrypt(text, key)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text encrypted with Vigenère cipher!")
+                
+                elif algo == 'playfair':
+                    key = password_entry.get()
+                    if not key:
+                        messagebox.showwarning("Input Error", "Please enter encryption key")
+                        return
+                    result = PlayfairCipher.encrypt(text, key)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text encrypted with Playfair cipher!")
+                
+                elif algo == 'railfence':
+                    rails = int(password_entry.get() or 3)
+                    result = RailFenceCipher.encrypt(text, rails)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", f"Text encrypted with Rail Fence cipher (rails={rails})")
+                
+                # Modern Symmetric Encryption
                 elif algo == 'aes':
                     password = password_entry.get()
                     if not password:
@@ -264,8 +332,48 @@ class SecureCipherStegnoApp:
                     output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
                     output_text.insert(tk.END, f"IV: {result['iv']}")
                     
-                    messagebox.showinfo("Success", "Text encrypted successfully! Save both ciphertext and IV.")
+                    messagebox.showinfo("Success", "Text encrypted with AES-256! Save both ciphertext and IV.")
                 
+                elif algo == 'blowfish':
+                    password = password_entry.get()
+                    if not password:
+                        messagebox.showwarning("Input Error", "Please enter password")
+                        return
+                    
+                    result = BlowfishCipher.encrypt_with_password(text, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
+                    output_text.insert(tk.END, f"IV: {result['iv']}")
+                    
+                    messagebox.showinfo("Success", "Text encrypted with Blowfish! Save both ciphertext and IV.")
+                
+                elif algo == '3des':
+                    password = password_entry.get()
+                    if not password:
+                        messagebox.showwarning("Input Error", "Please enter password")
+                        return
+                    
+                    result = DES3Cipher.encrypt_with_password(text, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
+                    output_text.insert(tk.END, f"IV: {result['iv']}")
+                    
+                    messagebox.showinfo("Success", "Text encrypted with 3DES!\n\n⚠️ Note: 3DES is legacy. Consider using AES.")
+                
+                elif algo == 'chacha20':
+                    password = password_entry.get()
+                    if not password:
+                        messagebox.showwarning("Input Error", "Please enter password")
+                        return
+                    
+                    result = ChaCha20Cipher.encrypt_with_password(text, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
+                    output_text.insert(tk.END, f"Nonce: {result['nonce']}")
+                    
+                    messagebox.showinfo("Success", "Text encrypted with ChaCha20! Save both ciphertext and nonce.")
+                
+                # Asymmetric Encryption
                 elif algo == 'rsa':
                     key_file = filedialog.askopenfilename(title="Select Public Key",
                                                          filetypes=[("PEM files", "*.pem")])
@@ -299,7 +407,7 @@ class SecureCipherStegnoApp:
         # Create decryption window
         window = tk.Toplevel(self.root)
         window.title(f"Decrypt with {algo.upper()}")
-        window.geometry("600x500")
+        window.geometry("600x600")
         window.configure(bg="white")
         
         # Input ciphertext
@@ -308,19 +416,34 @@ class SecureCipherStegnoApp:
         input_text = scrolledtext.ScrolledText(window, height=8, font=("Arial", 11))
         input_text.pack(padx=20, pady=5, fill=tk.BOTH, expand=True)
         
-        # Additional fields for AES
+        # Additional fields for modern ciphers (IV/Nonce)
         iv_entry = None
-        if algo == 'aes':
+        if algo in ['aes', 'blowfish', '3des']:
             tk.Label(window, text="IV (Initialization Vector):", font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            iv_entry = tk.Entry(window, font=("Arial", 11), width=50)
+            iv_entry.pack(pady=5)
+        elif algo == 'chacha20':
+            tk.Label(window, text="Nonce:", font=("Arial", 11),
                     bg="white").pack(pady=5)
             iv_entry = tk.Entry(window, font=("Arial", 11), width=50)
             iv_entry.pack(pady=5)
         
         # Password/Key input
-        if algo in ['aes', 'caesar']:
-            tk.Label(window, text="Password/Shift:", font=("Arial", 11),
+        password_entry = None
+        if algo in ['aes', 'blowfish', '3des', 'chacha20', 'vigenere', 'playfair']:
+            label_text = "Key:" if algo in ['vigenere', 'playfair'] else "Password:"
+            tk.Label(window, text=label_text, font=("Arial", 11),
                     bg="white").pack(pady=5)
-            password_entry = tk.Entry(window, font=("Arial", 11), show="*" if algo == 'aes' else "")
+            show_char = "" if algo in ['vigenere', 'playfair'] else "*"
+            password_entry = tk.Entry(window, font=("Arial", 11), show=show_char, width=40)
+            password_entry.pack(pady=5)
+        elif algo in ['caesar', 'railfence']:
+            label_text = "Shift Value:" if algo == 'caesar' else "Number of Rails:"
+            tk.Label(window, text=label_text, font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            password_entry = tk.Entry(window, font=("Arial", 11), width=20)
+            password_entry.insert(0, "3")
             password_entry.pack(pady=5)
         
         # Output text
@@ -336,12 +459,42 @@ class SecureCipherStegnoApp:
                 return
             
             try:
+                # Classical Ciphers
                 if algo == 'caesar':
                     shift = int(password_entry.get() or 3)
                     result = CaesarCipher.decrypt(text, shift)
                     output_text.delete("1.0", tk.END)
                     output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
                 
+                elif algo == 'vigenere':
+                    key = password_entry.get()
+                    if not key:
+                        messagebox.showwarning("Input Error", "Please enter decryption key")
+                        return
+                    result = VigenereCipher.decrypt(text, key)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == 'playfair':
+                    key = password_entry.get()
+                    if not key:
+                        messagebox.showwarning("Input Error", "Please enter decryption key")
+                        return
+                    result = PlayfairCipher.decrypt(text, key)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == 'railfence':
+                    rails = int(password_entry.get() or 3)
+                    result = RailFenceCipher.decrypt(text, rails)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                # Modern Symmetric Encryption
                 elif algo == 'aes':
                     password = password_entry.get()
                     iv = iv_entry.get().strip()
@@ -355,6 +508,46 @@ class SecureCipherStegnoApp:
                     output_text.insert("1.0", result)
                     messagebox.showinfo("Success", "Text decrypted successfully!")
                 
+                elif algo == 'blowfish':
+                    password = password_entry.get()
+                    iv = iv_entry.get().strip()
+                    
+                    if not password or not iv:
+                        messagebox.showwarning("Input Error", "Please enter password and IV")
+                        return
+                    
+                    result = BlowfishCipher.decrypt_with_password(text, iv, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == '3des':
+                    password = password_entry.get()
+                    iv = iv_entry.get().strip()
+                    
+                    if not password or not iv:
+                        messagebox.showwarning("Input Error", "Please enter password and IV")
+                        return
+                    
+                    result = DES3Cipher.decrypt_with_password(text, iv, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == 'chacha20':
+                    password = password_entry.get()
+                    nonce = iv_entry.get().strip()
+                    
+                    if not password or not nonce:
+                        messagebox.showwarning("Input Error", "Please enter password and nonce")
+                        return
+                    
+                    result = ChaCha20Cipher.decrypt_with_password(text, nonce, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                # Asymmetric Encryption
                 elif algo == 'rsa':
                     key_file = filedialog.askopenfilename(title="Select Private Key",
                                                          filetypes=[("PEM files", "*.pem")])
@@ -446,10 +639,15 @@ class SecureCipherStegnoApp:
                 title="Select Cover Image",
                 filetypes=[("Image files", "*.png *.bmp")]
             )
-        else:
+        elif stego_type == 'audio':
             cover_file = filedialog.askopenfilename(
                 title="Select Cover Audio",
                 filetypes=[("WAV files", "*.wav")]
+            )
+        else:  # video
+            cover_file = filedialog.askopenfilename(
+                title="Select Cover Video",
+                filetypes=[("Video files", "*.mp4 *.avi")]
             )
         
         if not cover_file:
@@ -478,10 +676,15 @@ class SecureCipherStegnoApp:
                     defaultextension=".png",
                     filetypes=[("PNG files", "*.png"), ("BMP files", "*.bmp")]
                 )
-            else:
+            elif stego_type == 'audio':
                 output_file = filedialog.asksaveasfilename(
                     defaultextension=".wav",
                     filetypes=[("WAV files", "*.wav")]
+                )
+            else:  # video
+                output_file = filedialog.asksaveasfilename(
+                    defaultextension=".mp4",
+                    filetypes=[("MP4 files", "*.mp4"), ("AVI files", "*.avi")]
                 )
             
             if not output_file:
@@ -498,7 +701,7 @@ class SecureCipherStegnoApp:
                                       f"Output: {output_file}\n"
                                       f"Message size: {result['message_size']} bytes\n"
                                       f"Compressed: {result['compressed']}")
-                else:
+                elif stego_type == 'audio':
                     result = AudioSteganography.encode(
                         cover_file, message, output_file
                     )
@@ -506,6 +709,14 @@ class SecureCipherStegnoApp:
                                       f"Message hidden successfully!\n\n"
                                       f"Output: {output_file}\n"
                                       f"Duration: {result['audio_duration']:.2f}s")
+                else:  # video
+                    result = VideoSteganography.encode(
+                        cover_file, message, output_file
+                    )
+                    messagebox.showinfo("Success",
+                                      f"Message hidden successfully!\n\n"
+                                      f"Output: {output_file}\n"
+                                      f"Frames: {result.get('frames_used', 'N/A')}")
                 
                 window.destroy()
                 self.logger.success("Message hidden successfully")
@@ -527,10 +738,15 @@ class SecureCipherStegnoApp:
                 title="Select Stego Image",
                 filetypes=[("Image files", "*.png *.bmp")]
             )
-        else:
+        elif stego_type == 'audio':
             stego_file = filedialog.askopenfilename(
                 title="Select Stego Audio",
                 filetypes=[("WAV files", "*.wav")]
+            )
+        else:  # video
+            stego_file = filedialog.askopenfilename(
+                title="Select Stego Video",
+                filetypes=[("Video files", "*.mp4 *.avi")]
             )
         
         if not stego_file:
@@ -542,8 +758,10 @@ class SecureCipherStegnoApp:
                     stego_file,
                     compressed=self.compress_var.get()
                 )
-            else:
+            elif stego_type == 'audio':
                 message = AudioSteganography.decode(stego_file)
+            else:  # video
+                message = VideoSteganography.decode(stego_file)
             
             # Show message
             window = tk.Toplevel(self.root)
@@ -587,10 +805,15 @@ class SecureCipherStegnoApp:
                 title="Select Image",
                 filetypes=[("Image files", "*.png *.bmp *.jpg *.jpeg")]
             )
-        else:
+        elif stego_type == 'audio':
             file_path = filedialog.askopenfilename(
                 title="Select Audio",
                 filetypes=[("WAV files", "*.wav")]
+            )
+        else:  # video
+            file_path = filedialog.askopenfilename(
+                title="Select Video",
+                filetypes=[("Video files", "*.mp4 *.avi")]
             )
         
         if not file_path:
@@ -604,7 +827,7 @@ class SecureCipherStegnoApp:
                                   f"Total Pixels: {capacity['total_pixels']:,}\n"
                                   f"Max Bytes: {capacity['max_bytes']:,}\n"
                                   f"Max Characters: ~{capacity['max_chars_approx']:,}")
-            else:
+            elif stego_type == 'audio':
                 capacity = AudioSteganography.get_capacity(file_path)
                 messagebox.showinfo("Audio Capacity",
                                   f"Channels: {capacity['channels']}\n"
@@ -612,6 +835,13 @@ class SecureCipherStegnoApp:
                                   f"Duration: {capacity['duration_seconds']:.2f}s\n"
                                   f"Max Bytes: {capacity['max_bytes']:,}\n"
                                   f"Max Characters: ~{capacity['max_chars_approx']:,}")
+            else:  # video
+                capacity = VideoSteganography.get_capacity(file_path)
+                messagebox.showinfo("Video Capacity",
+                                  f"Video Resolution: {capacity.get('resolution', 'N/A')}\n"
+                                  f"Total Frames: {capacity.get('total_frames', 'N/A'):,}\n"
+                                  f"Max Bytes: {capacity.get('max_bytes', 'N/A'):,}\n"
+                                  f"Max Characters: ~{capacity.get('max_chars_approx', 'N/A'):,}")
         
         except Exception as e:
             messagebox.showerror("Error", str(e))
@@ -863,17 +1093,28 @@ class SecureCipherStegnoApp:
         """Show about dialog"""
         about_text = """
 🔐 Secure CipherStegno Tool
-Professional Edition v2.0
+Professional Edition v3.1.0
 
 Advanced cryptography and steganography toolkit
 for secure communication and data hiding.
 
 Features:
-• Multiple encryption algorithms (Caesar, AES-256, RSA)
-• Image and audio steganography
-• Password strength validation
+
+Cryptography:
+• Classical: Caesar, Vigenère, Playfair, Rail Fence
+• Modern Symmetric: AES-256, Blowfish, 3DES, ChaCha20
+• Asymmetric: RSA (2048/4096 bit)
+
+Steganography:
+• Image steganography (PNG, BMP)
+• Audio steganography (WAV)
+• Video steganography (MP4, AVI)
+• Compression support
+
+Security Tools:
+• Password generator & validator
+• File hash calculator (MD5, SHA-1, SHA-256, SHA-512)
 • File integrity verification
-• Hash calculation tools
 • Key management system
 
 Developed by: Parth Thakar
