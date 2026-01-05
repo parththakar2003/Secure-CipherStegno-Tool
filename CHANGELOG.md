@@ -5,6 +5,53 @@ All notable changes to the Secure CipherStegno Tool project will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2025-01-05
+
+### Added - Enhanced Cryptography & Interactive CLI
+
+#### New Cryptographic Algorithms
+- **Blowfish Cipher**: Fast symmetric block cipher with variable key length (4-56 bytes)
+- **Triple DES (3DES)**: Legacy symmetric cipher for backward compatibility
+- **ChaCha20**: Modern stream cipher, mobile-optimized, Google-approved
+- **Classical Ciphers Already Included**: Vigenère, Playfair, Rail Fence
+
+#### Video Steganography
+- **Video Steganography Module**: Hide messages in MP4/AVI video files
+- **JPEG Steganography**: Support for lossy image formats
+- **Frame-based LSB**: Encode data across multiple video frames
+- **FFmpeg Integration**: Professional video processing
+
+#### Advanced Security Tools
+- **Encryption Analyzer**: Compare and analyze algorithm strengths
+- **Secure Token Generator**: Generate API keys, session tokens
+- **Network Port Scanner**: Basic security scanning (localhost safe)
+- **Data Sanitizer**: Sanitize filenames and user inputs
+- **Cryptographic Hash Chain**: Create verifiable data integrity chains
+
+#### Interactive CLI with ANSI Art 🎨
+- **Beautiful ASCII Banners**: Eye-catching startup screens
+- **Dynamic Animations**: Loading spinners, progress bars, typewriter effects
+- **Colorful Menus**: Intuitive navigation with color-coded sections
+- **Information Boxes**: Success, error, warning, and info displays
+- **Interactive Prompts**: User-friendly input helpers
+- **Visual Feedback**: Real-time status indicators
+- **Menu System**: Easy-to-use hierarchical menus
+
+### Enhanced
+- **README Documentation**: Comprehensive feature documentation
+- **Module Exports**: All new algorithms properly exported
+- **Error Handling**: Improved error messages and recovery
+- **User Experience**: Much more attractive and intuitive CLI
+
+### Features Summary
+- ✅ 3 new modern encryption algorithms
+- ✅ Video steganography support
+- ✅ 5 advanced security tools
+- ✅ Beautiful interactive CLI interface
+- ✅ ANSI art and animations
+- ✅ Enhanced documentation
+- ✅ Unit tests for new algorithms
+
 ## [3.1.0] - 2025-01-05
 
 ### Added - Enterprise & Mobile Framework
