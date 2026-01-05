@@ -23,11 +23,39 @@ Thank you for your interest in contributing to the Secure CipherStegno Tool! Thi
 ### Pull Requests
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Test your changes thoroughly
-5. Commit with clear messages (`git commit -m 'Add amazing feature'`)
-6. Push to your branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+3. **Ensure you're using Python 3.8 or higher** (`python3 --version`)
+4. Make your changes
+5. Test your changes thoroughly
+6. Commit with clear messages (`git commit -m 'Add amazing feature'`)
+7. Push to your branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
+
+## ⚙️ Development Environment
+
+### Prerequisites
+- **Python 3.8 or higher** (Python 2.7 is not supported)
+- pip (Python package installer)
+- Git
+
+### Setup
+```bash
+# Clone your fork
+git clone https://github.com/YOUR-USERNAME/Secure-CipherStegno-Tool.git
+cd Secure-CipherStegno-Tool
+
+# Verify Python version
+python3 check_python.py
+
+# Create virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+python3 -m pip install -r requirements.txt
+
+# Run tests
+python3 -m pytest tests/
+```
 
 ## 📝 Code Guidelines
 

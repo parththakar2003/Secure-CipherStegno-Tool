@@ -117,6 +117,24 @@ Secure-CipherStegno-Tool/
 
 ## 🧪 Installation & Usage
 
+### Prerequisites
+
+**⚠️ IMPORTANT: Python 3.8 or higher is required**
+
+This tool requires **Python 3.8+** because modern cryptography and steganography libraries need it. Python 2.7 and older Python 3 versions are **not supported**.
+
+```bash
+# Check your Python version (must be 3.8 or higher)
+python --version
+# or
+python3 --version
+
+# If you have Python 2.7, you MUST upgrade to Python 3.8+
+# Visit: https://www.python.org/downloads/
+```
+
+If you see a Python 2.7 version, use `python3` instead of `python` for all commands, or install Python 3.8+ from [python.org](https://www.python.org/downloads/).
+
 ### Quick Start
 
 ```bash
@@ -124,14 +142,17 @@ Secure-CipherStegno-Tool/
 git clone https://github.com/parththakar2003/Secure-CipherStegno-Tool.git
 cd Secure-CipherStegno-Tool
 
-# Install dependencies
-pip install -r requirements.txt
+# Verify Python version (REQUIRED: 3.8+)
+python3 check_python.py
+
+# Install dependencies (use python3 if python points to Python 2.7)
+python3 -m pip install -r requirements.txt
 
 # Run the enhanced GUI application
-python app.py
+python3 app.py
 
 # Or use the command-line interface
-python cli.py --help
+python3 cli.py --help
 ```
 
 ### GUI Application
@@ -143,29 +164,29 @@ The enhanced GUI provides a modern, user-friendly interface with three main tabs
 3. **Security Tools** — Password tools, hash calculator, file verification
 
 ```bash
-python app.py
+python3 app.py
 ```
 
 ### CLI Usage Examples
 
 #### Encrypt with AES
 ```bash
-python cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "strongpassword"
+python3 cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "strongpassword"
 ```
 
 #### Hide message in image
 ```bash
-python cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png --compress
+python3 cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png --compress
 ```
 
 #### Generate RSA keys
 ```bash
-python cli.py generate-keys --algorithm rsa --output-dir ./keys
+python3 cli.py generate-keys --algorithm rsa --output-dir ./keys
 ```
 
 #### Calculate file hash
 ```bash
-python cli.py hash --input document.pdf --algorithm sha256
+python3 cli.py hash --input document.pdf --algorithm sha256
 ```
 
 For detailed usage instructions, see [docs/USAGE.md](docs/USAGE.md)
@@ -174,13 +195,13 @@ For detailed usage instructions, see [docs/USAGE.md](docs/USAGE.md)
 
 ```bash
 # Run all tests
-python -m pytest tests/
+python3 -m pytest tests/
 
 # Run specific test file
-python -m pytest tests/test_crypto.py
+python3 -m pytest tests/test_crypto.py
 
 # Or use unittest
-python -m unittest discover tests/
+python3 -m unittest discover tests/
 ```
 ## 🧪 Coming Soon...
 
