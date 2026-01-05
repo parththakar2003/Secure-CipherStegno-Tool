@@ -142,13 +142,20 @@ If you see a Python 2.7 version, use `python3` instead of `python` for all comma
 git clone https://github.com/parththakar2003/Secure-CipherStegno-Tool.git
 cd Secure-CipherStegno-Tool
 
-# Verify Python version (REQUIRED: 3.8+)
+# STEP 1: Verify Python version (REQUIRED: 3.8+)
+# This is the MOST IMPORTANT step - the tool will not work with Python 2.7!
 python3 check_python.py
 
-# Install dependencies (use python3 if python points to Python 2.7)
+# If you see an error, you need to install Python 3.8 or higher:
+# - Visit: https://www.python.org/downloads/
+# - On Ubuntu/Debian: sudo apt-get install python3.8
+# - On macOS: brew install python@3.8
+# - Always use 'python3' command instead of 'python'
+
+# STEP 2: Install dependencies (use python3 if python points to Python 2.7)
 python3 -m pip install -r requirements.txt
 
-# Run the enhanced GUI application
+# STEP 3: Run the enhanced GUI application
 python3 app.py
 
 # Or use the command-line interface

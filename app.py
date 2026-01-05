@@ -3,10 +3,38 @@ Enhanced GUI Application for Secure CipherStegno Tool
 Integrates all advanced features with improved UI
 """
 
-import tkinter as tk
-from tkinter import ttk, messagebox, filedialog, scrolledtext
 import sys
 import os
+
+# Check Python version before any other imports
+if sys.version_info < (3, 8):
+    sys.stderr.write(
+        "=" * 70 + "\n"
+        "ERROR: Python 3.8 or higher is required\n"
+        "=" * 70 + "\n"
+        "Current Python version: {0}.{1}.{2}\n".format(
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro
+        ) +
+        "Required Python version: 3.8 or higher\n\n"
+        "This tool requires Python 3.8+ because:\n"
+        "  • Pillow >= 10.0.0 requires Python 3.8+\n"
+        "  • NumPy >= 1.24.0 requires Python 3.8+\n"
+        "  • FastAPI >= 0.104.0 requires Python 3.8+\n"
+        "  • Other dependencies require modern Python versions\n\n"
+        "To fix this issue:\n"
+        "  1. Install Python 3.8+ from https://www.python.org/downloads/\n"
+        "  2. Use 'python3' instead of 'python' command\n"
+        "  3. Run: python3 app.py\n\n"
+        "For detailed instructions, see:\n"
+        "  https://github.com/parththakar2003/Secure-CipherStegno-Tool#installation--usage\n"
+        "=" * 70 + "\n"
+    )
+    sys.exit(1)
+
+import tkinter as tk
+from tkinter import ttk, messagebox, filedialog, scrolledtext
 
 # Add src to path
 sys.path.insert(0, os.path.dirname(__file__))
