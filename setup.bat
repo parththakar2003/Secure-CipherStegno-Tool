@@ -17,6 +17,12 @@ if errorlevel 1 (
 
 REM Check Python version
 echo Checking Python version...
+if not exist check_python.py (
+    echo Error: check_python.py not found
+    echo Please make sure you're in the Secure-CipherStegno-Tool directory
+    exit /b 1
+)
+
 python check_python.py
 if errorlevel 1 (
     echo.

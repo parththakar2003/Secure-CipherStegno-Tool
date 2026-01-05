@@ -18,6 +18,12 @@ fi
 
 # Check Python version
 echo "Checking Python version..."
+if [ ! -f "check_python.py" ]; then
+    echo "❌ Error: check_python.py not found"
+    echo "Please make sure you're in the Secure-CipherStegno-Tool directory"
+    exit 1
+fi
+
 python3 check_python.py
 if [ $? -ne 0 ]; then
     echo ""
