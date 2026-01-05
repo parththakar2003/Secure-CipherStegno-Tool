@@ -137,6 +137,47 @@ If you see a Python 2.7 version, use `python3` instead of `python` for all comma
 
 ### Quick Start
 
+#### Automated Setup (Recommended)
+
+The easiest way to get started is using the automated setup script:
+
+**Linux/macOS:**
+```bash
+# Clone the repository
+git clone https://github.com/parththakar2003/Secure-CipherStegno-Tool.git
+cd Secure-CipherStegno-Tool
+
+# Run the setup script (creates virtual environment and installs dependencies)
+chmod +x setup.sh
+./setup.sh
+
+# Activate the virtual environment
+source venv/bin/activate
+
+# Run the application
+python app.py
+```
+
+**Windows:**
+```bash
+# Clone the repository
+git clone https://github.com/parththakar2003/Secure-CipherStegno-Tool.git
+cd Secure-CipherStegno-Tool
+
+# Run the setup script (creates virtual environment and installs dependencies)
+setup.bat
+
+# Activate the virtual environment
+venv\Scripts\activate.bat
+
+# Run the application
+python app.py
+```
+
+#### Manual Setup
+
+If you prefer to set up manually or the automated script doesn't work:
+
 ```bash
 # Clone the repository
 git clone https://github.com/parththakar2003/Secure-CipherStegno-Tool.git
@@ -148,19 +189,35 @@ python3 check_python.py
 
 # If you see an error, you need to install Python 3.8 or higher:
 # - Visit: https://www.python.org/downloads/
-# - On Ubuntu/Debian: sudo apt-get install python3.8
+# - On Ubuntu/Debian: sudo apt-get install python3.8 python3.8-venv
 # - On macOS: brew install python@3.8
 # - Always use 'python3' command instead of 'python'
 
-# STEP 2: Install dependencies (use python3 if python points to Python 2.7)
-python3 -m pip install -r requirements.txt
+# STEP 2: Create a virtual environment (HIGHLY RECOMMENDED)
+# This avoids "externally-managed-environment" errors on modern systems
+python3 -m venv venv
 
-# STEP 3: Run the enhanced GUI application
-python3 app.py
+# STEP 3: Activate the virtual environment
+# On Linux/macOS:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate.bat
+
+# STEP 4: Install dependencies
+pip install -r requirements.txt
+
+# STEP 5: Run the enhanced GUI application
+python app.py
 
 # Or use the command-line interface
-python3 cli.py --help
+python cli.py --help
 ```
+
+**Important Notes:**
+- ⚠️ **Virtual environment is strongly recommended** to avoid conflicts with system packages
+- On modern Linux distributions (Kali, Ubuntu 23.04+), direct system-wide installation is blocked by PEP 668
+- If you see `externally-managed-environment` error, you **must** use a virtual environment
+- Always activate the virtual environment before running the application
 
 ### GUI Application
 
@@ -201,15 +258,90 @@ For detailed usage instructions, see [docs/USAGE.md](docs/USAGE.md)
 ### Running Tests
 
 ```bash
+# Activate virtual environment first
+source venv/bin/activate  # Linux/macOS
+# or
+venv\Scripts\activate.bat  # Windows
+
 # Run all tests
-python3 -m pytest tests/
+python -m pytest tests/
 
 # Run specific test file
-python3 -m pytest tests/test_crypto.py
+python -m pytest tests/test_crypto.py
 
 # Or use unittest
-python3 -m unittest discover tests/
+python -m unittest discover tests/
 ```
+
+### Troubleshooting
+
+#### "externally-managed-environment" Error
+
+If you see this error when trying to install packages:
+```
+error: externally-managed-environment
+
+× This environment is externally managed
+```
+
+**Solution:** Use a virtual environment (required on modern Linux distributions):
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate it
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate.bat  # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+This error occurs on Kali Linux, Ubuntu 23.04+, and other modern distributions that implement PEP 668 to protect system Python packages.
+
+#### "ModuleNotFoundError: No module named 'Crypto'"
+
+This means dependencies are not installed. Make sure you:
+1. Created and activated a virtual environment
+2. Ran `pip install -r requirements.txt`
+3. Are running the application with the virtual environment activated
+
+#### Python Version Issues
+
+If you see Python version errors:
+```bash
+# Check your Python version (must be 3.8+)
+python3 --version
+
+# Run the version checker
+python3 check_python.py
+```
+
+If your version is too old:
+- **Ubuntu/Debian:** `sudo apt-get install python3.8 python3.8-venv`
+- **macOS:** `brew install python@3.8`
+- **Windows:** Download from https://www.python.org/downloads/
+
+#### Virtual Environment Not Activating
+
+**Linux/macOS:**
+```bash
+# Make sure you use 'source'
+source venv/bin/activate
+
+# You should see (venv) in your prompt
+(venv) user@machine:~$
+```
+
+**Windows:**
+```bash
+# Use the full path
+venv\Scripts\activate.bat
+
+# You should see (venv) in your prompt
+(venv) C:\path\to\project>
+```
+
 ## 🧪 Coming Soon...
 
 ### Planned Features
