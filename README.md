@@ -26,28 +26,57 @@
 ## 📌 Features
 
 ### Cryptography
+#### Classical Ciphers
 - 🔐 **Caesar Cipher** — Simple substitution cipher for basic encryption
-- 🔒 **AES-256** — Industry-standard symmetric encryption
+- 🔤 **Vigenère Cipher** — Polyalphabetic substitution cipher with keyword
+- 🎲 **Playfair Cipher** — Digraph substitution cipher (5x5 matrix)
+- 🚂 **Rail Fence Cipher** — Transposition cipher with zigzag pattern
+
+#### Modern Symmetric Encryption
+- 🔒 **AES-256** — Industry-standard symmetric encryption (Recommended)
+- ⚡ **Blowfish** — Fast block cipher by Bruce Schneier
+- 🔐 **3DES (Triple DES)** — Legacy encryption (backwards compatibility)
+- 🚀 **ChaCha20** — Modern stream cipher (Google, mobile-optimized)
+
+#### Asymmetric Encryption
 - 🔑 **RSA** — Public key cryptography (2048/4096 bit)
 - 🔐 **Hybrid Encryption** — Combine AES and RSA for optimal security
-- 🔑 **Key Management** — Generate, store, and manage cryptographic keys
+
+#### Key Management
+- 🔑 **Key Generation** — Generate secure cryptographic keys
+- 💾 **Key Storage** — Safe key management and storage
+- 🔄 **Key Exchange** — Secure key distribution protocols
 
 ### Steganography
-- 🖼️ **Image Steganography** — Hide messages in PNG/BMP images using LSB technique
+- 🖼️ **Image Steganography** — Hide messages in PNG/BMP/JPEG images using LSB technique
 - 🎵 **Audio Steganography** — Embed secrets in WAV audio files
+- 🎬 **Video Steganography** — Hide data in MP4/AVI video frames (NEW!)
 - 🗜️ **Compression Support** — Compress messages before hiding for larger capacity
 - 📊 **Capacity Analysis** — Check how much data can be hidden in cover files
 - 🔧 **Advanced LSB** — Configurable bits-per-channel for balance between capacity and quality
 
 ### Security Tools
+#### Password Security
 - ✅ **Password Validator** — Analyze password strength with detailed feedback
 - 🔄 **Password Generator** — Create cryptographically secure passwords
+
+#### Hash & Integrity
 - #️⃣ **Hash Calculator** — MD5, SHA-1, SHA-256, SHA-512 support
 - 🔍 **File Integrity Verification** — Verify files haven't been tampered with
 - 🗑️ **Secure File Deletion** — Overwrite files before deletion
 
+#### Advanced Security Tools (NEW!)
+- 📊 **Encryption Analyzer** — Compare and analyze algorithm strengths
+- 🔐 **Token Generator** — Generate secure API keys and session tokens
+- 🌐 **Port Scanner** — Basic network security scanning (localhost)
+- 🧹 **Data Sanitizer** — Sanitize filenames and user inputs
+- ⛓️ **Hash Chain** — Create verifiable data integrity chains
+
 ### User Interface
 - 🖥️ **Modern GUI** — Intuitive Tkinter interface with professional design
+- 🎨 **Interactive CLI** — Beautiful ANSI art-based command-line interface (NEW!)
+- 🌈 **Colorful Menus** — Enhanced visual experience with animations
+- ⚡ **Progress Indicators** — Real-time feedback with spinners and progress bars
 - ⌨️ **CLI Support** — Full-featured command-line interface
 - 📖 **Comprehensive Documentation** — Usage guides and examples
 - 🧪 **Unit Tests** — Tested cryptography and utility functions
@@ -206,10 +235,14 @@ venv\Scripts\activate.bat
 # STEP 4: Install dependencies
 pip install -r requirements.txt
 
-# STEP 5: Run the enhanced GUI application
+# STEP 5: Run the application
+# Option 1: Enhanced GUI application
 python app.py
 
-# Or use the command-line interface
+# Option 2: Interactive CLI with beautiful menus and ANSI art (NEW!)
+python interactive_cli.py
+
+# Option 3: Traditional command-line interface
 python cli.py --help
 ```
 
@@ -219,16 +252,48 @@ python cli.py --help
 - If you see `externally-managed-environment` error, you **must** use a virtual environment
 - Always activate the virtual environment before running the application
 
-### GUI Application
+### Application Modes
+
+#### 1. GUI Application
 
 The enhanced GUI provides a modern, user-friendly interface with three main tabs:
 
-1. **Cryptography** — Caesar, AES-256, and RSA encryption/decryption
-2. **Steganography** — Image and audio steganography
+1. **Cryptography** — Multiple encryption algorithms (Caesar, Vigenère, AES, RSA, Blowfish, ChaCha20)
+2. **Steganography** — Image, audio, and video steganography
 3. **Security Tools** — Password tools, hash calculator, file verification
 
 ```bash
 python3 app.py
+```
+
+#### 2. Interactive CLI (NEW! 🎨)
+
+Beautiful terminal interface with:
+- 🎨 Colorful ANSI art banners
+- 📱 Easy-to-use menu navigation
+- ⚡ Loading animations and progress bars
+- 🎯 Interactive prompts and confirmations
+- 🌈 Visual feedback with colors and icons
+
+```bash
+python3 interactive_cli.py
+```
+
+**Features:**
+- Visual menu-based navigation
+- Real-time encryption/decryption
+- Algorithm comparison tool
+- Password strength analysis
+- Network security scanning
+- Token generation
+- And much more!
+
+#### 3. Traditional CLI
+
+For scripting and automation:
+
+```bash
+python3 cli.py --help
 ```
 
 ### CLI Usage Examples

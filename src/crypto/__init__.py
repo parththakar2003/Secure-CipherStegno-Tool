@@ -2,6 +2,7 @@
 
 from .cipher import CaesarCipher, AESCipher, RSACipher, hybrid_encrypt, hybrid_decrypt
 from .classical import VigenereCipher, PlayfairCipher, RailFenceCipher
+from .modern import BlowfishCipher, DES3Cipher, ChaCha20Cipher
 
 __all__ = [
     'CaesarCipher',
@@ -11,5 +12,8 @@ __all__ = [
     'hybrid_decrypt',
     'VigenereCipher',
     'PlayfairCipher',
-    'RailFenceCipher'
+    'RailFenceCipher',
+    'BlowfishCipher',
+    'DES3Cipher',
+    'ChaCha20Cipher'
 ]
