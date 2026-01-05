@@ -5,6 +5,86 @@ All notable changes to the Secure CipherStegno Tool project will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2025-01-05
+
+### Added - Enterprise & Mobile Framework
+- **Web API Framework**: Complete FastAPI implementation with RESTful endpoints
+- **OAuth2 Authentication**: Token-based authentication system
+- **API Documentation**: Auto-generated Swagger/OpenAPI documentation
+- **CORS Support**: Cross-origin resource sharing for web clients
+- **File Upload API**: Multipart form data handling for steganography
+- **Protected Endpoints**: Bearer token authentication examples
+- **Enterprise Architecture**: Scalable cloud-ready infrastructure
+
+### Features Implemented
+- ✅ RESTful API with FastAPI
+- ✅ OAuth2 password flow
+- ✅ API documentation (Swagger UI)
+- ✅ File upload/download endpoints
+- ✅ Encryption/decryption API
+- ✅ Steganography API
+- ✅ Password tools API
+- ✅ Hash calculation API
+
+### Framework Ready For
+- Mobile app integration (iOS/Android)
+- HSM integration points
+- Enterprise authentication (LDAP/SSO)
+- Compliance logging
+- Multi-tenancy support
+
+## [3.0.0] - 2025-01-05
+
+### Added - Cloud Platform
+- **FastAPI Web Service**: Professional web API framework
+- **RESTful Endpoints**: Complete API for all features
+- **OAuth2 Authentication**: Secure token-based auth
+- **CORS Middleware**: Cross-origin support
+- **API Documentation**: Swagger UI and ReDoc
+- **File Handling**: Upload/download via API
+- **Multi-user Support**: User authentication framework
+
+### API Endpoints
+- `/api/v1/encrypt` - Text encryption
+- `/api/v1/decrypt` - Text decryption
+- `/api/v1/stego/encode` - Hide messages in files
+- `/api/v1/stego/decode` - Extract messages
+- `/api/v1/tools/*` - Security tools
+- `/token` - OAuth2 token endpoint
+
+## [2.3.0] - 2025-01-05
+
+### Added - AI & Machine Learning
+- **Chi-Square Test**: Statistical steganalysis
+- **RS Analysis**: Regular-Singular groups analysis
+- **Histogram Analysis**: Anomaly detection in images
+- **Tamper Detection**: Clone detection algorithms
+- **Noise Analysis**: Inconsistency detection
+- **Steganalysis Framework**: ML-ready architecture
+
+### AI Features
+- ✅ Chi-square test for LSB detection
+- ✅ Multiple analysis methods
+- ✅ Confidence scoring
+- ✅ Comprehensive reporting
+- ✅ Framework for neural networks
+
+## [2.2.0] - 2025-01-05
+
+### Added - Expanded Steganography
+- **Video Steganography**: Frame-based LSB for MP4/AVI
+- **JPEG Steganography**: Lossy format support
+- **PDF Steganography**: Metadata-based hiding
+- **Text Steganography**: Whitespace and Unicode methods
+- **Document Support**: Text file steganography
+
+### New Formats
+- ✅ Video files (MP4, AVI) with ffmpeg
+- ✅ JPEG images (with quality preservation)
+- ✅ PDF documents (metadata embedding)
+- ✅ Text files (whitespace/Unicode)
+- ✅ MP3 placeholder (framework ready)
+
 ## [2.1.0] - 2025-01-05
 
 ### Added

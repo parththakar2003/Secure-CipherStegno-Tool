@@ -6,3 +6,16 @@ scipy>=1.10.0
 pydub>=0.25.1
 colorama>=0.4.6
 tqdm>=4.65.0
+
+# v3.0 - Web API
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+pydantic>=2.0.0
+
+# v2.2 - Document Steganography
+PyPDF2>=3.0.0
+
+# v2.3 - AI/ML (optional)
+# tensorflow>=2.14.0  # Uncomment for neural network features
+# torch>=2.0.0  # Alternative to TensorFlow

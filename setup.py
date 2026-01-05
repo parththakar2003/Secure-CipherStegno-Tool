@@ -17,7 +17,7 @@ def read_requirements(filename):
 
 setup(
     name='secure-cipherstegno-tool',
-    version='2.1.0',
+    version='3.1.0',
     author='Parth Thakar',
     author_email='parththakar2003@users.noreply.github.com',
     description='Advanced cryptography and steganography toolkit for secure communication',
