@@ -12,7 +12,11 @@ if sys.version_info < (3, 8):
         "=" * 70 + "\n"
         "ERROR: Python 3.8 or higher is required\n"
         "=" * 70 + "\n"
-        f"Current Python version: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}\n"
+        "Current Python version: {0}.{1}.{2}\n".format(
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro
+        ) +
         "Required Python version: 3.8 or higher\n\n"
         "This tool requires Python 3.8+ because:\n"
         "  • Pillow >= 10.0.0 requires Python 3.8+\n"

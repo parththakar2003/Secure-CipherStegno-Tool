@@ -21,8 +21,9 @@ def check_python_version():
         print("=" * 70)
         print("ERROR: Python version incompatibility detected!")
         print("=" * 70)
-        print(f"\nCurrent Python version: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
-        print(f"Required Python version: {REQUIRED_VERSION_STR} or higher")
+        print("\nCurrent Python version: {0}.{1}.{2}".format(
+            sys.version_info[0], sys.version_info[1], sys.version_info[2]))
+        print("Required Python version: {0} or higher".format(REQUIRED_VERSION_STR))
         print("\nThis tool requires Python 3.8 or higher because:")
         print("  • Pillow >= 10.0.0 requires Python 3.8+")
         print("  • NumPy >= 1.24.0 requires Python 3.8+")
@@ -40,7 +41,8 @@ def check_python_version():
         return False
     
     print("✓ Python version check passed")
-    print(f"  Using Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
+    print("  Using Python {0}.{1}.{2}".format(
+        sys.version_info[0], sys.version_info[1], sys.version_info[2]))
     return True
 
 if __name__ == "__main__":
