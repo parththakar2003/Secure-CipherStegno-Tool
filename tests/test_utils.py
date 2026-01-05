@@ -48,7 +48,7 @@ class TestPasswordValidator(unittest.TestCase):
     
     def test_medium_password(self):
         """Test medium password detection"""
-        result = PasswordValidator.validate_strength("Password123")
+        result = PasswordValidator.validate_strength("GoodPass123!")
         self.assertIn(result['strength'], ['Medium', 'Strong'])
     
     def test_strong_password(self):

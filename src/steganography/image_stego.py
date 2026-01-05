@@ -73,7 +73,7 @@ class ImageSteganography:
         """
         # Load image
         image = Image.open(image_path).convert('RGB')
-        pixels = np.array(image)
+        pixels = np.array(image, dtype=np.int32)  # Use int32 to prevent overflow
         
         # Compress if requested
         if compress:
@@ -97,20 +97,17 @@ class ImageSteganography:
                 if data_index >= len(binary_message):
                     break
                 
-                pixel = list(pixels[row, col])
                 for color_channel in range(3):  # RGB
                     if data_index < len(binary_message):
                         # Modify LSB
-                        pixel[color_channel] = (pixel[color_channel] & ~1) | int(binary_message[data_index])
+                        pixels[row, col, color_channel] = (pixels[row, col, color_channel] & ~1) | int(binary_message[data_index])
                         data_index += 1
-                
-                pixels[row, col] = tuple(pixel)
             
             if data_index >= len(binary_message):
                 break
         
-        # Save image
-        stego_image = Image.fromarray(pixels.astype(np.uint8))
+        # Save image - ensure proper uint8 conversion
+        stego_image = Image.fromarray(np.clip(pixels, 0, 255).astype(np.uint8))
         stego_image.save(output_path)
         
         return {

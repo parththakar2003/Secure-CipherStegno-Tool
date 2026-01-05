@@ -1,5 +1,6 @@
 """
 Command Line Interface for Secure CipherStegno Tool
+Version 2.0.0
 """
 
 import argparse
@@ -13,6 +14,7 @@ init(autoreset=True)
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+from src import __version__
 from src.crypto import CaesarCipher, AESCipher, RSACipher
 from src.steganography import ImageSteganography, AudioSteganography
 from src.utils import Logger, PasswordValidator, calculate_file_hash
@@ -28,7 +30,7 @@ class CLI:
     def _create_parser(self):
         """Create argument parser"""
         parser = argparse.ArgumentParser(
-            description='Secure CipherStegno Tool - Advanced Cryptography and Steganography',
+            description=f'Secure CipherStegno Tool v{__version__} - Advanced Cryptography and Steganography',
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
 Examples:
