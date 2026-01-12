@@ -520,6 +520,36 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 - Test your changes thoroughly
 - Keep discussions professional
 
+## 🎓 Academic Use & Research
+
+This project is suitable for academic research and major project submissions. We provide comprehensive documentation for students and researchers.
+
+### Abstract Submission
+
+For students using this project as a major project or research work, we provide:
+
+- **[ABSTRACT_SUBMISSION.md](ABSTRACT_SUBMISSION.md)** — Complete abstract template following academic guidelines
+- **[docs/ABSTRACT_GUIDELINES.md](docs/ABSTRACT_GUIDELINES.md)** — Detailed instructions for completing and submitting the abstract
+
+### Key Features for Academic Projects
+
+✓ **Research-Based:** Combines theoretical cryptography with practical implementation  
+✓ **Well-Documented:** Comprehensive documentation with references to academic literature  
+✓ **Original Implementation:** All code written from scratch with proper citations  
+✓ **Modular Architecture:** Clear separation of concerns suitable for academic analysis  
+✓ **Testing Framework:** Unit tests demonstrating software engineering best practices  
+
+### Academic Compliance
+
+The abstract submission template ensures compliance with typical institutional requirements:
+- Plagiarism below 10% through original implementation
+- Zero AI-generated content (0% tolerance maintained)
+- Research methodology and literature review
+- Clear supervision structure
+- Proper academic citations and references
+
+For more information, see [ABSTRACT_SUBMISSION.md](ABSTRACT_SUBMISSION.md).
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
