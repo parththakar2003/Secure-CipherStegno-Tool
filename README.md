@@ -4,6 +4,24 @@
 
 **Secure CipherStegno Tool** is a comprehensive professional security platform that combines advanced **cryptography**, **steganography**, **AI-based analysis**, and **cloud services** to provide enterprise-grade security solutions — all with privacy-first, local-first processing capabilities.
 
+---
+
+## 🎓 IMPORTANT: Major Project Requirements (Updated January 2026)
+
+**📋 For students submitting this as a major project:**
+- **[PROJECT_REQUIREMENTS_CLARIFICATION.md](PROJECT_REQUIREMENTS_CLARIFICATION.md)** — **MUST READ**: Critical guidelines on research requirements, existing implementations, new contributions, and guide allocation
+- **[TA1_PREPARATION_GUIDE.md](TA1_PREPARATION_GUIDE.md)** — Complete preparation guide for TA-1 evaluation (February 2026)
+- **[ABSTRACT_SUBMISSION.md](ABSTRACT_SUBMISSION.md)** — Updated abstract template with existing work vs. new contributions clearly documented
+
+**⚠️ Key Requirements:**
+1. ✅ Project must be **practical + research-focused** (both required)
+2. ✅ Must clearly explain **existing implementations** in the domain
+3. ✅ Must clearly state **your new work and improvements**
+4. ✅ Must show how **new work matches project objectives**
+5. ✅ Deadline: Submit title and abstract TODAY by 1:00 PM for guide allocation
+
+---
+
 ![License](https://img.shields.io/github/license/parththakar2003/Secure-CipherStegno-Tool?style=for-the-badge)
 ![Stars](https://img.shields.io/github/stars/parththakar2003/Secure-CipherStegno-Tool?style=for-the-badge)
 ![Forks](https://img.shields.io/github/forks/parththakar2003/Secure-CipherStegno-Tool?style=for-the-badge)
