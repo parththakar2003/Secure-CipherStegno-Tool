@@ -18,6 +18,8 @@ This directory contains comprehensive documentation for the Secure CipherStegno 
 ### Academic Documentation
 - **[ABSTRACT_GUIDELINES.md](ABSTRACT_GUIDELINES.md)** — Complete guide for preparing abstract submission
 - **[SUBMISSION_CHECKLIST.md](SUBMISSION_CHECKLIST.md)** — Pre-submission verification checklist
+- **[../PROJECT_REQUIREMENTS_CLARIFICATION.md](../PROJECT_REQUIREMENTS_CLARIFICATION.md)** — **NEW**: Critical guidelines on research requirements, existing implementations, and guide allocation
+- **[../TA1_PREPARATION_GUIDE.md](../TA1_PREPARATION_GUIDE.md)** — **NEW**: Complete preparation guide for TA-1 evaluation (February 2026)
 
 ---
 
@@ -25,17 +27,30 @@ This directory contains comprehensive documentation for the Secure CipherStegno 
 
 If you're using this project for academic purposes (major project, research work, thesis):
 
-### Start Here:
-1. Read **[../ABSTRACT_SUBMISSION.md](../ABSTRACT_SUBMISSION.md)** — Main abstract template
+### ⚠️ URGENT: Major Project Requirements (January 2026)
+1. **[../PROJECT_REQUIREMENTS_CLARIFICATION.md](../PROJECT_REQUIREMENTS_CLARIFICATION.md)** — **MUST READ FIRST**: Critical clarifications on:
+   - Research + practical requirements (both mandatory)
+   - Existing implementations you must explain
+   - Your new contributions clearly documented
+   - Guide allocation requirements
+   - TA-1 preparation timeline
+
+2. **[../TA1_PREPARATION_GUIDE.md](../TA1_PREPARATION_GUIDE.md)** — Complete TA-1 evaluation preparation (February 2026)
+
+### Standard Academic Documents:
+1. Read **[../ABSTRACT_SUBMISSION.md](../ABSTRACT_SUBMISSION.md)** — Main abstract template (updated with existing work vs. new contributions)
 2. Follow **[ABSTRACT_GUIDELINES.md](ABSTRACT_GUIDELINES.md)** — Detailed instructions
 3. Use **[SUBMISSION_CHECKLIST.md](SUBMISSION_CHECKLIST.md)** — Verify before submission
 
 ### Key Requirements:
-✓ Research-based work (not just development)  
+✓ **Practical + Research-based** (both required, not just one)  
+✓ **Explain existing implementations** clearly  
+✓ **State your new work** and how it adds value  
+✓ **Match objectives** with contributions  
 ✓ Plagiarism below 10%  
 ✓ Zero AI-generated content (0% tolerance)  
 ✓ Main supervisor from your institute  
-✓ Proper academic citations  
+✓ Submit title and abstract by deadline  
 
 ---
 
