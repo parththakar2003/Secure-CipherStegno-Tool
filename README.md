@@ -8,7 +8,12 @@
 
 ## 🎓 IMPORTANT: Major Project Requirements (Updated January 2026)
 
-**📋 For students submitting this as a major project:**
+**🚨 URGENT: Abstract submission TODAY by 1:00 PM for guide allocation!**
+
+**📋 For students - Start here:**
+- **[QUICK_ACTION_GUIDE.md](QUICK_ACTION_GUIDE.md)** — ⚡ **START HERE**: Quick reference for what to do NOW (5-min read)
+
+**📚 Detailed Documentation:**
 - **[PROJECT_REQUIREMENTS_CLARIFICATION.md](PROJECT_REQUIREMENTS_CLARIFICATION.md)** — **MUST READ**: Critical guidelines on research requirements, existing implementations, new contributions, and guide allocation
 - **[TA1_PREPARATION_GUIDE.md](TA1_PREPARATION_GUIDE.md)** — Complete preparation guide for TA-1 evaluation (February 2026)
 - **[ABSTRACT_SUBMISSION.md](ABSTRACT_SUBMISSION.md)** — Updated abstract template with existing work vs. new contributions clearly documented
