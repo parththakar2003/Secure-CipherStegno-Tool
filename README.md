@@ -603,7 +603,9 @@ This project is suitable for academic research and major project submissions. We
 
 For students using this project as a major project or research work, we provide:
 
-- **[ABSTRACT_SUBMISSION.md](ABSTRACT_SUBMISSION.md)** — Complete abstract template following academic guidelines
+- **[ABSTRACT_SUBMISSION.docx](ABSTRACT_SUBMISSION.docx)** — Ready-to-submit Word document with pre-filled student information
+- **[ABSTRACT_SUBMISSION.md](ABSTRACT_SUBMISSION.md)** — Complete abstract template following academic guidelines (Markdown format)
+- **[ABSTRACT_DOCUMENT_README.md](ABSTRACT_DOCUMENT_README.md)** — Instructions for using and regenerating the Word document
 - **[docs/ABSTRACT_GUIDELINES.md](docs/ABSTRACT_GUIDELINES.md)** — Detailed instructions for completing and submitting the abstract
 
 ### Key Features for Academic Projects
