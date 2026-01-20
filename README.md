@@ -97,10 +97,12 @@
 
 ### User Interface
 - 🖥️ **Modern GUI** — Intuitive Tkinter interface with professional design
-- 🎨 **Interactive CLI** — Beautiful ANSI art-based command-line interface (NEW!)
+- 🌐 **Web Interface** — Full-featured web-based interface with FastAPI backend (NEW!)
+- 🎨 **Interactive CLI** — Beautiful ANSI art-based command-line interface
 - 🌈 **Colorful Menus** — Enhanced visual experience with animations
 - ⚡ **Progress Indicators** — Real-time feedback with spinners and progress bars
-- ⌨️ **CLI Support** — Full-featured command-line interface
+- ⌨️ **CLI Support** — Full-featured command-line interface with arguments
+- 🔄 **Synchronized Interfaces** — All three interfaces (GUI, Web, CLI) use the same core operations
 - 📖 **Comprehensive Documentation** — Usage guides and examples
 - 🧪 **Unit Tests** — Tested cryptography and utility functions
 - 📂 **Local-first execution** — No cloud storage or tracking
@@ -133,6 +135,9 @@ This tool aligns perfectly with the **Screenpipe** mission of **privacy-first, l
 ### Core Technologies
 - **Python 3.8+** — Main programming language
 - **Tkinter** — Modern GUI interface
+- **FastAPI** — Web interface and REST API (NEW!)
+- **Uvicorn** — ASGI server for web interface
+- **Jinja2** — HTML templating for web interface
 - **PyCryptodome** — Cryptographic operations (AES, RSA)
 - **Pillow (PIL)** — Image processing and steganography
 - **NumPy** — Efficient array operations
@@ -148,15 +153,21 @@ This tool aligns perfectly with the **Screenpipe** mission of **privacy-first, l
 ```
 Secure-CipherStegno-Tool/
 ├── src/
+│   ├── core/            # Shared core operations (NEW!)
 │   ├── crypto/          # Cryptography modules
 │   ├── steganography/   # Steganography implementations
-│   └── utils/           # Security and file utilities
+│   ├── utils/           # Security and file utilities
+│   └── web/             # Web interface and API (NEW!)
+│       ├── api.py       # FastAPI backend
+│       ├── static/      # CSS and JavaScript
+│       └── templates/   # HTML templates
 ├── tests/               # Unit tests
 ├── docs/                # Documentation
 ├── examples/            # Sample files and usage examples
+├── launch.py           # Unified launcher (NEW!)
 ├── app.py              # Enhanced GUI application
 ├── cli.py              # Command-line interface
-├── index.py            # Original simple GUI (legacy)
+├── interactive_cli.py  # Interactive CLI
 └── requirements.txt    # Python dependencies
 ```
 
@@ -259,13 +270,24 @@ venv\Scripts\activate.bat
 pip install -r requirements.txt
 
 # STEP 5: Run the application
+# Unified Launcher (Recommended - NEW!)
+python launch.py gui          # Launch GUI interface
+python launch.py web          # Launch web interface (http://localhost:8000)
+python launch.py interactive  # Launch interactive CLI
+python launch.py cli --help   # Traditional CLI with arguments
+
+# Or run interfaces directly:
 # Option 1: Enhanced GUI application
 python app.py
 
-# Option 2: Interactive CLI with beautiful menus and ANSI art (NEW!)
+# Option 2: Web Interface (NEW!)
+python -m uvicorn src.web.api:app --host 0.0.0.0 --port 8000
+# Then open browser to http://localhost:8000
+
+# Option 3: Interactive CLI with beautiful menus and ANSI art
 python interactive_cli.py
 
-# Option 3: Traditional command-line interface
+# Option 4: Traditional command-line interface
 python cli.py --help
 ```
 
@@ -277,7 +299,7 @@ python cli.py --help
 
 ### Application Modes
 
-#### 1. GUI Application
+#### 1. GUI Application (Tkinter)
 
 The enhanced GUI provides a modern, user-friendly interface with three main tabs:
 
@@ -286,10 +308,36 @@ The enhanced GUI provides a modern, user-friendly interface with three main tabs
 3. **Security Tools** — Password tools, hash calculator, file verification
 
 ```bash
+python3 launch.py gui
+# or
 python3 app.py
 ```
 
-#### 2. Interactive CLI (NEW! 🎨)
+#### 2. Web Interface (NEW! 🌐)
+
+Full-featured web-based interface with modern design:
+- 🎨 Responsive, modern UI with tabs
+- 🔒 All cryptography algorithms supported
+- 🖼️ Image and audio steganography
+- 🛡️ Security tools (password validator, generator, hash calculator)
+- 📱 Mobile-friendly design
+- ⚡ Real-time operations with loading indicators
+
+```bash
+python3 launch.py web --port 8000
+# or
+python3 -m uvicorn src.web.api:app --host 0.0.0.0 --port 8000
+```
+
+Then open your browser to `http://localhost:8000`
+
+**Features:**
+- Synchronized with GUI and CLI - same core operations
+- RESTful API at `/api/docs` for programmatic access
+- No page reloads needed
+- Privacy-first: all processing happens server-side, no data sent to cloud
+
+#### 3. Interactive CLI (🎨)
 
 Beautiful terminal interface with:
 - 🎨 Colorful ANSI art banners
@@ -299,6 +347,8 @@ Beautiful terminal interface with:
 - 🌈 Visual feedback with colors and icons
 
 ```bash
+python3 launch.py interactive
+# or
 python3 interactive_cli.py
 ```
 
@@ -311,11 +361,13 @@ python3 interactive_cli.py
 - Token generation
 - And much more!
 
-#### 3. Traditional CLI
+#### 4. Traditional CLI
 
 For scripting and automation:
 
 ```bash
+python3 launch.py cli --help
+# or
 python3 cli.py --help
 ```
 
