@@ -16,6 +16,10 @@ from src.crypto import (CaesarCipher, AESCipher, RSACipher, VigenereCipher,
 from src.steganography import ImageSteganography, AudioSteganography, VideoSteganography
 from src.utils import PasswordValidator, calculate_file_hash, Logger
 
+# Default constants
+DEFAULT_CAESAR_SHIFT = 3
+DEFAULT_RAIL_FENCE_RAILS = 3
+
 
 class CryptoOperations:
     """Unified cryptography operations"""
@@ -74,7 +78,7 @@ class CryptoOperations:
             
             elif algorithm == "railfence":
                 if not key:
-                    key = "3"  # default rails
+                    key = str(DEFAULT_RAIL_FENCE_RAILS)
                 rails = int(key)
                 ciphertext = RailFenceCipher.encrypt(text, rails)
                 return {
@@ -199,7 +203,7 @@ class CryptoOperations:
             
             elif algorithm == "railfence":
                 if not key:
-                    key = "3"  # default rails
+                    key = str(DEFAULT_RAIL_FENCE_RAILS)
                 rails = int(key)
                 plaintext = RailFenceCipher.decrypt(ciphertext, rails)
                 return {

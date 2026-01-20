@@ -671,29 +671,34 @@ function displayEncodeResult(response) {
   messageSizeSpan.textContent = response.message_size || 0;
   
   // Create blob from base64-encoded output
-  // More efficient approach: direct blob creation without manual byte array conversion
-  const binaryString = atob(response.output);
-  const bytes = new Uint8Array(binaryString.length);
+  try {
+    const binaryString = atob(response.output);
+    const bytes = new Uint8Array(binaryString.length);
+    
+    // Convert binary string to bytes
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    
+    // Create blob with appropriate MIME type
+    const mimeType = `image/${response.format}`;
+    const blob = new Blob([bytes], { type: mimeType });
   
-  // Convert binary string to bytes
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
+    // Create object URL and set download link
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = `stego_output.${response.format}`;
+    
+    // Show result box
+    resultBox.style.display = 'block';
+    
+    // Scroll to result
+    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (error) {
+    console.error('Error decoding base64 output:', error);
+    showToast('Error processing encoded file. Invalid base64 data.', 'error');
+    hideLoading();
   }
-  
-  // Create blob with appropriate MIME type
-  const mimeType = `image/${response.format}`;
-  const blob = new Blob([bytes], { type: mimeType });
-  
-  // Create object URL and set download link
-  const url = URL.createObjectURL(blob);
-  downloadLink.href = url;
-  downloadLink.download = `stego_output.${response.format}`;
-  
-  // Show result box
-  resultBox.style.display = 'block';
-  
-  // Scroll to result
-  resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /**

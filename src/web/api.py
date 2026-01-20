@@ -20,6 +20,7 @@ import os
 from typing import Optional, List
 import tempfile
 import shutil
+import base64
 
 # Add parent directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
@@ -44,10 +45,11 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
-# CORS middleware
+# CORS middleware - SECURITY: Restricted for local development
+# For production, configure specific allowed origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],  # Restrict to localhost only
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -275,7 +277,6 @@ async def stego_encode(
         os.unlink(cover_path)
         os.unlink(output_path)
         
-        import base64
         return {
             "success": True,
             "message_size": result['message_size'],
@@ -318,14 +319,22 @@ async def stego_decode(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# OAuth2 token endpoint (placeholder)
+# OAuth2 token endpoint (DEVELOPMENT ONLY - NOT FOR PRODUCTION)
+# WARNING: This is a placeholder for development/testing purposes only
+# In production, implement proper authentication with secure credential storage
 @app.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    """OAuth2 login endpoint (placeholder)"""
-    # In production, validate credentials against database
+    """
+    OAuth2 login endpoint (DEVELOPMENT PLACEHOLDER)
+    
+    ⚠️ WARNING: This endpoint uses hardcoded credentials and is NOT secure!
+    DO NOT use in production. Implement proper authentication system.
+    """
+    # DEVELOPMENT ONLY: These credentials are for testing purposes
+    # In production: validate against secure database, use password hashing, etc.
     if form_data.username == "demo" and form_data.password == "demo123":
         return {
-            "access_token": "demo_token_12345",
+            "access_token": "demo_token_12345",  # Not a real JWT token
             "token_type": "bearer"
         }
     raise HTTPException(
