@@ -5,10 +5,8 @@ with student information filled in.
 """
 
 from docx import Document
-from docx.shared import Pt, Inches, RGBColor
+from docx.shared import Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.enum.style import WD_STYLE_TYPE
-import re
 
 # Student Information
 ENROLLMENT_NO = "240043003004"
