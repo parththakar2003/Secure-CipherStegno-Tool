@@ -1,22 +1,26 @@
 """
-FastAPI Web Application (v3.0)
-RESTful API for Secure CipherStegno Tool
+FastAPI Web Application (v3.1)
+RESTful API and Web Interface for Secure CipherStegno Tool
 """
 
 try:
-    from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends, status
+    from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends, status, Request
     from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
     from fastapi.middleware.cors import CORSMiddleware
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.templating import Jinja2Templates
+    from fastapi.responses import HTMLResponse, FileResponse
     from pydantic import BaseModel
     import uvicorn
 except ImportError:
-    raise ImportError("FastAPI dependencies required. Install with: pip install fastapi uvicorn python-multipart")
+    raise ImportError("FastAPI dependencies required. Install with: pip install fastapi uvicorn python-multipart jinja2")
 
 import sys
 import os
 from typing import Optional, List
 import tempfile
 import shutil
+import base64
 
 # Add parent directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
@@ -25,20 +29,27 @@ from src.crypto import CaesarCipher, AESCipher, RSACipher, VigenereCipher
 from src.steganography import ImageSteganography, AudioSteganography
 from src.utils import PasswordValidator, calculate_file_hash
 from src import __version__
+from src.core import CryptoOperations, SteganographyOperations, SecurityOperations
 
 # Initialize FastAPI app
 app = FastAPI(
     title="Secure CipherStegno API",
-    description="RESTful API for cryptography and steganography operations",
+    description="RESTful API and Web Interface for cryptography and steganography operations",
     version=__version__,
     docs_url="/api/docs",
     redoc_url="/api/redoc"
 )
 
-# CORS middleware
+# Mount static files and templates
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+
+# CORS middleware - SECURITY: Restricted for local development
+# For production, configure specific allowed origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],  # Restrict to localhost only
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -59,6 +70,9 @@ class EncryptResponse(BaseModel):
     ciphertext: str
     algorithm: str
     iv: Optional[str] = None
+    public_key: Optional[str] = None
+    private_key: Optional[str] = None
+    nonce: Optional[str] = None
 
 class DecryptRequest(BaseModel):
     ciphertext: str
@@ -66,6 +80,8 @@ class DecryptRequest(BaseModel):
     key: Optional[str] = None
     shift: Optional[int] = 3
     iv: Optional[str] = None
+    nonce: Optional[str] = None
+    private_key: Optional[str] = None
 
 class PasswordValidationRequest(BaseModel):
     password: str
@@ -80,15 +96,22 @@ class User(BaseModel):
     username: str
     email: Optional[str] = None
 
-# Root endpoint
-@app.get("/")
-async def root():
+# Web Interface Root
+@app.get("/", response_class=HTMLResponse)
+async def web_interface(request: Request):
+    """Serve the web interface"""
+    return templates.TemplateResponse("index.html", {"request": request, "version": __version__})
+
+# API Root endpoint
+@app.get("/api")
+async def api_root():
     """API root endpoint"""
     return {
         "name": "Secure CipherStegno API",
         "version": __version__,
         "status": "operational",
         "endpoints": {
+            "web": "/",
             "docs": "/api/docs",
             "health": "/api/health",
             "encrypt": "/api/v1/encrypt",
@@ -112,38 +135,28 @@ async def health_check():
 async def encrypt_text(request: EncryptRequest):
     """Encrypt text using specified algorithm"""
     try:
-        if request.algorithm == "caesar":
-            ciphertext = CaesarCipher.encrypt(request.text, request.shift or 3)
-            return EncryptResponse(
-                success=True,
-                ciphertext=ciphertext,
-                algorithm="caesar"
-            )
+        result = CryptoOperations.encrypt(
+            text=request.text,
+            algorithm=request.algorithm,
+            key=request.key,
+            shift=request.shift or 3
+        )
         
-        elif request.algorithm == "vigenere":
-            if not request.key:
-                raise HTTPException(status_code=400, detail="Key required for Vigenère cipher")
-            ciphertext = VigenereCipher.encrypt(request.text, request.key)
-            return EncryptResponse(
-                success=True,
-                ciphertext=ciphertext,
-                algorithm="vigenere"
-            )
+        if not result['success']:
+            raise HTTPException(status_code=400, detail=result.get('error', 'Encryption failed'))
         
-        elif request.algorithm == "aes":
-            if not request.key:
-                raise HTTPException(status_code=400, detail="Password required for AES")
-            result = AESCipher.encrypt_with_password(request.text, request.key)
-            return EncryptResponse(
-                success=True,
-                ciphertext=result['ciphertext'],
-                algorithm="aes",
-                iv=result['iv']
-            )
-        
-        else:
-            raise HTTPException(status_code=400, detail=f"Unsupported algorithm: {request.algorithm}")
+        return EncryptResponse(
+            success=True,
+            ciphertext=result['ciphertext'],
+            algorithm=result['algorithm'],
+            iv=result.get('iv'),
+            public_key=result.get('public_key'),
+            private_key=result.get('private_key'),
+            nonce=result.get('nonce')
+        )
     
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -152,41 +165,27 @@ async def encrypt_text(request: EncryptRequest):
 async def decrypt_text(request: DecryptRequest):
     """Decrypt text using specified algorithm"""
     try:
-        if request.algorithm == "caesar":
-            plaintext = CaesarCipher.decrypt(request.ciphertext, request.shift or 3)
-            return {
-                "success": True,
-                "plaintext": plaintext,
-                "algorithm": "caesar"
-            }
+        result = CryptoOperations.decrypt(
+            ciphertext=request.ciphertext,
+            algorithm=request.algorithm,
+            key=request.key,
+            shift=request.shift or 3,
+            iv=request.iv,
+            nonce=request.nonce,
+            private_key=request.private_key
+        )
         
-        elif request.algorithm == "vigenere":
-            if not request.key:
-                raise HTTPException(status_code=400, detail="Key required")
-            plaintext = VigenereCipher.decrypt(request.ciphertext, request.key)
-            return {
-                "success": True,
-                "plaintext": plaintext,
-                "algorithm": "vigenere"
-            }
+        if not result['success']:
+            raise HTTPException(status_code=400, detail=result.get('error', 'Decryption failed'))
         
-        elif request.algorithm == "aes":
-            if not request.key or not request.iv:
-                raise HTTPException(status_code=400, detail="Password and IV required")
-            plaintext = AESCipher.decrypt_with_password(
-                request.ciphertext,
-                request.iv,
-                request.key
-            )
-            return {
-                "success": True,
-                "plaintext": plaintext,
-                "algorithm": "aes"
-            }
-        
-        else:
-            raise HTTPException(status_code=400, detail=f"Unsupported algorithm: {request.algorithm}")
+        return {
+            "success": True,
+            "plaintext": result['plaintext'],
+            "algorithm": result['algorithm']
+        }
     
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -278,7 +277,6 @@ async def stego_encode(
         os.unlink(cover_path)
         os.unlink(output_path)
         
-        import base64
         return {
             "success": True,
             "message_size": result['message_size'],
@@ -321,14 +319,22 @@ async def stego_decode(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# OAuth2 token endpoint (placeholder)
+# OAuth2 token endpoint (DEVELOPMENT ONLY - NOT FOR PRODUCTION)
+# WARNING: This is a placeholder for development/testing purposes only
+# In production, implement proper authentication with secure credential storage
 @app.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    """OAuth2 login endpoint (placeholder)"""
-    # In production, validate credentials against database
+    """
+    OAuth2 login endpoint (DEVELOPMENT PLACEHOLDER)
+    
+    ⚠️ WARNING: This endpoint uses hardcoded credentials and is NOT secure!
+    DO NOT use in production. Implement proper authentication system.
+    """
+    # DEVELOPMENT ONLY: These credentials are for testing purposes
+    # In production: validate against secure database, use password hashing, etc.
     if form_data.username == "demo" and form_data.password == "demo123":
         return {
-            "access_token": "demo_token_12345",
+            "access_token": "demo_token_12345",  # Not a real JWT token
             "token_type": "bearer"
         }
     raise HTTPException(
