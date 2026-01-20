@@ -51,7 +51,13 @@ python app.py
 - Security Tools (Password generator, validator, file hash, integrity checker)
 - Visual feedback and error handling
 
-**Note:** Requires Tkinter (included on Windows/macOS, install on Linux with `sudo apt-get install python3-tk`)
+**Note:** Requires Tkinter (GUI library)
+- **Windows/macOS:** Included with Python by default
+- **Linux:**
+  - Ubuntu/Debian: `sudo apt-get install python3-tk`
+  - Fedora/RHEL: `sudo dnf install python3-tkinter`
+  - Arch: `sudo pacman -S tk`
+  - openSUSE: `sudo zypper install python3-tk`
 
 ## 💻 3. Command-Line Interface (CLI)
 
@@ -156,15 +162,18 @@ python launch.py web
 - Remote access
 - Microservices architecture
 
-## 🔄 Comparison
+## 🔄 Interface Comparison
+
+Choose the best interface for your needs:
 
 | Interface | Best For | GUI | Automation | Learning Curve |
 |-----------|----------|-----|------------|----------------|
-| **launch.py** | General use | ✅ | ✅ | ⭐ Easy |
-| **GUI (app.py)** | Desktop users | ✅ | ❌ | ⭐⭐ Easy |
+| **GUI (app.py)** | Desktop users | ✅ | ❌ | ⭐ Easy |
 | **CLI (cli.py)** | Scripts & automation | ❌ | ✅ | ⭐⭐⭐ Medium |
 | **Interactive CLI** | Learning & exploration | ✅ | ❌ | ⭐ Easy |
 | **Web API** | Integration & remote | ✅ | ✅ | ⭐⭐⭐ Medium |
+
+**Note:** Use `launch.py` as a convenient launcher for any of the above interfaces.
 
 ## 🎯 Recommendations
 
