@@ -102,7 +102,7 @@ class CryptoOperations:
             elif algorithm == "blowfish":
                 if not key:
                     return {'success': False, 'error': 'Key required for Blowfish'}
-                result = BlowfishCipher.encrypt(text, key)
+                result = BlowfishCipher.encrypt_with_password(text, key)
                 return {
                     'success': True,
                     'ciphertext': result['ciphertext'],
@@ -113,7 +113,7 @@ class CryptoOperations:
             elif algorithm == "des3" or algorithm == "3des":
                 if not key:
                     return {'success': False, 'error': 'Key required for 3DES'}
-                result = DES3Cipher.encrypt(text, key)
+                result = DES3Cipher.encrypt_with_password(text, key)
                 return {
                     'success': True,
                     'ciphertext': result['ciphertext'],
@@ -124,7 +124,7 @@ class CryptoOperations:
             elif algorithm == "chacha20":
                 if not key:
                     return {'success': False, 'error': 'Key required for ChaCha20'}
-                result = ChaCha20Cipher.encrypt(text, key)
+                result = ChaCha20Cipher.encrypt_with_password(text, key)
                 return {
                     'success': True,
                     'ciphertext': result['ciphertext'],
@@ -133,12 +133,14 @@ class CryptoOperations:
                 }
             
             elif algorithm == "rsa":
-                result = RSACipher.encrypt(text)
+                rsa_cipher = RSACipher()
+                keys = rsa_cipher.generate_key_pair()
+                ciphertext = rsa_cipher.encrypt(text)
                 return {
                     'success': True,
-                    'ciphertext': result['ciphertext'],
-                    'public_key': result['public_key'],
-                    'private_key': result['private_key'],
+                    'ciphertext': ciphertext,
+                    'public_key': keys['public_key'],
+                    'private_key': keys['private_key'],
                     'algorithm': 'rsa'
                 }
             
@@ -225,7 +227,7 @@ class CryptoOperations:
             elif algorithm == "blowfish":
                 if not key or not iv:
                     return {'success': False, 'error': 'Key and IV required'}
-                plaintext = BlowfishCipher.decrypt(ciphertext, key, iv)
+                plaintext = BlowfishCipher.decrypt_with_password(ciphertext, iv, key)
                 return {
                     'success': True,
                     'plaintext': plaintext,
@@ -235,7 +237,7 @@ class CryptoOperations:
             elif algorithm == "des3" or algorithm == "3des":
                 if not key or not iv:
                     return {'success': False, 'error': 'Key and IV required'}
-                plaintext = DES3Cipher.decrypt(ciphertext, key, iv)
+                plaintext = DES3Cipher.decrypt_with_password(ciphertext, iv, key)
                 return {
                     'success': True,
                     'plaintext': plaintext,
@@ -245,7 +247,7 @@ class CryptoOperations:
             elif algorithm == "chacha20":
                 if not key or not nonce:
                     return {'success': False, 'error': 'Key and nonce required'}
-                plaintext = ChaCha20Cipher.decrypt(ciphertext, key, nonce)
+                plaintext = ChaCha20Cipher.decrypt_with_password(ciphertext, nonce, key)
                 return {
                     'success': True,
                     'plaintext': plaintext,
@@ -255,7 +257,9 @@ class CryptoOperations:
             elif algorithm == "rsa":
                 if not private_key:
                     return {'success': False, 'error': 'Private key required'}
-                plaintext = RSACipher.decrypt(ciphertext, private_key)
+                rsa_cipher = RSACipher()
+                rsa_cipher.load_private_key(private_key)
+                plaintext = rsa_cipher.decrypt(ciphertext)
                 return {
                     'success': True,
                     'plaintext': plaintext,
