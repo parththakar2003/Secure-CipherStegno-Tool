@@ -33,8 +33,40 @@ if sys.version_info < (3, 8):
     )
     sys.exit(1)
 
-import tkinter as tk
-from tkinter import ttk, messagebox, filedialog, scrolledtext
+# Check if tkinter is available (will fail in headless environments)
+try:
+    import tkinter as tk
+    from tkinter import ttk, messagebox, filedialog, scrolledtext
+except (ImportError, ModuleNotFoundError) as e:
+    print("=" * 70)
+    print("ERROR: Tkinter is not available")
+    print("=" * 70)
+    print()
+    print(f"Import error: {e}")
+    print()
+    print("The GUI application requires Tkinter, which is not available")
+    print("in this environment (headless or missing system package).")
+    print()
+    print("Available alternatives:")
+    print()
+    print("  1. Use the Command Line Interface (CLI):")
+    print("     python cli.py --help")
+    print()
+    print("  2. Use the Interactive CLI:")
+    print("     python interactive_cli.py")
+    print()
+    print("  3. Use the Web Interface:")
+    print("     python src/web/api.py")
+    print("     # or")
+    print("     python launch.py web")
+    print()
+    print("  4. Install Tkinter (if running on Linux):")
+    print("     Ubuntu/Debian: sudo apt-get install python3-tk")
+    print("     Fedora/RHEL:   sudo dnf install python3-tkinter")
+    print("     Arch:          sudo pacman -S tk")
+    print()
+    print("=" * 70)
+    sys.exit(1)
 
 # Add src to path
 sys.path.insert(0, os.path.dirname(__file__))
