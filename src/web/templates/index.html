@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure CipherStegno Tool - Web Interface</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>🔐 Secure CipherStegno Tool</h1>
+                <p class="version">Web Interface v3.1.0</p>
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link active" data-tab="crypto">Cryptography</a>
+                <a href="#" class="nav-link" data-tab="stego">Steganography</a>
+                <a href="#" class="nav-link" data-tab="tools">Security Tools</a>
+                <a href="#" class="nav-link" data-tab="about">About</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Cryptography Tab -->
+            <div id="crypto-tab" class="tab-content active">
+                <h2>🔒 Cryptography Operations</h2>
+                
+                <div class="operation-selector">
+                    <button class="op-btn active" data-op="encrypt">Encrypt</button>
+                    <button class="op-btn" data-op="decrypt">Decrypt</button>
+                </div>
+
+                <!-- Encrypt Section -->
+                <div id="encrypt-section" class="operation-section active">
+                    <div class="form-group">
+                        <label for="encrypt-text">Plain Text:</label>
+                        <textarea id="encrypt-text" rows="5" placeholder="Enter text to encrypt..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="encrypt-algorithm">Algorithm:</label>
+                        <select id="encrypt-algorithm">
+                            <optgroup label="Classical Ciphers">
+                                <option value="caesar">Caesar Cipher</option>
+                                <option value="vigenere">Vigenère Cipher</option>
+                                <option value="playfair">Playfair Cipher</option>
+                                <option value="railfence">Rail Fence Cipher</option>
+                            </optgroup>
+                            <optgroup label="Modern Encryption">
+                                <option value="aes" selected>AES-256 (Recommended)</option>
+                                <option value="blowfish">Blowfish</option>
+                                <option value="des3">3DES</option>
+                                <option value="chacha20">ChaCha20</option>
+                                <option value="rsa">RSA</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="encrypt-key-group">
+                        <label for="encrypt-key">Key/Password:</label>
+                        <input type="password" id="encrypt-key" placeholder="Enter encryption key...">
+                        <button type="button" class="toggle-password" onclick="togglePassword('encrypt-key', event)">👁️</button>
+                    </div>
+                    
+                    <div class="form-group" id="encrypt-shift-group" style="display: none;">
+                        <label for="encrypt-shift">Shift Value:</label>
+                        <input type="number" id="encrypt-shift" value="3" min="1" max="25">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="performEncryption()">🔒 Encrypt</button>
+                    
+                    <div class="result-box" id="encrypt-result" style="display: none;">
+                        <h3>Encryption Result:</h3>
+                        <div class="result-content">
+                            <p><strong>Algorithm:</strong> <span id="encrypt-result-algo"></span></p>
+                            <p><strong>Ciphertext:</strong></p>
+                            <textarea id="encrypt-result-text" rows="5" readonly></textarea>
+                            <p id="encrypt-result-iv" style="display: none;"><strong>IV:</strong> <span id="encrypt-iv-value"></span></p>
+                            <p id="encrypt-result-keys" style="display: none;">
+                                <strong>Public Key:</strong> <span id="encrypt-public-key"></span><br>
+                                <strong>Private Key:</strong> <span id="encrypt-private-key"></span>
+                            </p>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('encrypt-result-text')">📋 Copy Result</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decrypt Section -->
+                <div id="decrypt-section" class="operation-section" style="display: none;">
+                    <div class="form-group">
+                        <label for="decrypt-text">Ciphertext:</label>
+                        <textarea id="decrypt-text" rows="5" placeholder="Enter encrypted text..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="decrypt-algorithm">Algorithm:</label>
+                        <select id="decrypt-algorithm">
+                            <optgroup label="Classical Ciphers">
+                                <option value="caesar">Caesar Cipher</option>
+                                <option value="vigenere">Vigenère Cipher</option>
+                                <option value="playfair">Playfair Cipher</option>
+                                <option value="railfence">Rail Fence Cipher</option>
+                            </optgroup>
+                            <optgroup label="Modern Encryption">
+                                <option value="aes" selected>AES-256</option>
+                                <option value="blowfish">Blowfish</option>
+                                <option value="des3">3DES</option>
+                                <option value="chacha20">ChaCha20</option>
+                                <option value="rsa">RSA</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="decrypt-key-group">
+                        <label for="decrypt-key">Key/Password:</label>
+                        <input type="password" id="decrypt-key" placeholder="Enter decryption key...">
+                        <button type="button" class="toggle-password" onclick="togglePassword('decrypt-key', event)">👁️</button>
+                    </div>
+                    
+                    <div class="form-group" id="decrypt-shift-group" style="display: none;">
+                        <label for="decrypt-shift">Shift Value:</label>
+                        <input type="number" id="decrypt-shift" value="3" min="1" max="25">
+                    </div>
+                    
+                    <div class="form-group" id="decrypt-iv-group" style="display: none;">
+                        <label for="decrypt-iv">IV (Initialization Vector):</label>
+                        <input type="text" id="decrypt-iv" placeholder="Enter IV from encryption...">
+                    </div>
+                    
+                    <div class="form-group" id="decrypt-private-key-group" style="display: none;">
+                        <label for="decrypt-private-key">Private Key:</label>
+                        <textarea id="decrypt-private-key" rows="3" placeholder="Enter private key..."></textarea>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="performDecryption()">🔓 Decrypt</button>
+                    
+                    <div class="result-box" id="decrypt-result" style="display: none;">
+                        <h3>Decryption Result:</h3>
+                        <div class="result-content">
+                            <p><strong>Algorithm:</strong> <span id="decrypt-result-algo"></span></p>
+                            <p><strong>Plaintext:</strong></p>
+                            <textarea id="decrypt-result-text" rows="5" readonly></textarea>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('decrypt-result-text')">📋 Copy Result</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Steganography Tab -->
+            <div id="stego-tab" class="tab-content">
+                <h2>🖼️ Steganography Operations</h2>
+                
+                <div class="operation-selector">
+                    <button class="op-btn active" data-op="encode">Encode (Hide)</button>
+                    <button class="op-btn" data-op="decode">Decode (Extract)</button>
+                </div>
+
+                <!-- Encode Section -->
+                <div id="encode-section" class="operation-section active">
+                    <div class="form-group">
+                        <label for="cover-file">Cover File:</label>
+                        <input type="file" id="cover-file" accept=".png,.bmp,.wav">
+                        <small>Supported: PNG, BMP, WAV</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hide-message">Secret Message:</label>
+                        <textarea id="hide-message" rows="5" placeholder="Enter message to hide..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="compress-message" checked>
+                            Compress message (recommended for larger texts)
+                        </label>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="performEncode()">🔒 Hide Message</button>
+                    
+                    <div class="result-box" id="encode-result" style="display: none;">
+                        <h3>Encoding Result:</h3>
+                        <div class="result-content">
+                            <p>✅ Message successfully hidden!</p>
+                            <p><strong>Message Size:</strong> <span id="encode-message-size"></span> bytes</p>
+                            <a id="encode-download" class="btn btn-secondary" download="stego_output.png">💾 Download Stego File</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decode Section -->
+                <div id="decode-section" class="operation-section" style="display: none;">
+                    <div class="form-group">
+                        <label for="stego-file">Stego File:</label>
+                        <input type="file" id="stego-file" accept=".png,.bmp,.wav">
+                        <small>File containing hidden message</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="decompress-message" checked>
+                            Message was compressed
+                        </label>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="performDecode()">🔓 Extract Message</button>
+                    
+                    <div class="result-box" id="decode-result" style="display: none;">
+                        <h3>Decoded Message:</h3>
+                        <div class="result-content">
+                            <textarea id="decode-result-text" rows="5" readonly></textarea>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('decode-result-text')">📋 Copy Message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tools Tab -->
+            <div id="tools-tab" class="tab-content">
+                <h2>🛡️ Security Tools</h2>
+                
+                <div class="tools-grid">
+                    <!-- Password Validator -->
+                    <div class="tool-card">
+                        <h3>🔒 Password Validator</h3>
+                        <div class="form-group">
+                            <input type="password" id="validate-password" placeholder="Enter password to validate...">
+                            <button type="button" class="toggle-password" onclick="togglePassword('validate-password', event)">👁️</button>
+                        </div>
+                        <button class="btn btn-primary" onclick="validatePassword()">Check Strength</button>
+                        <div id="password-validation-result" class="result-box" style="display: none;">
+                            <p><strong>Strength:</strong> <span id="password-strength"></span></p>
+                            <p><strong>Score:</strong> <span id="password-score"></span>/100</p>
+                            <div id="password-feedback"></div>
+                        </div>
+                    </div>
+
+                    <!-- Password Generator -->
+                    <div class="tool-card">
+                        <h3>🔑 Password Generator</h3>
+                        <div class="form-group">
+                            <label for="password-length">Length:</label>
+                            <input type="number" id="password-length" value="16" min="8" max="64">
+                        </div>
+                        <button class="btn btn-primary" onclick="generatePassword()">Generate Password</button>
+                        <div id="generated-password-result" class="result-box" style="display: none;">
+                            <p><strong>Password:</strong></p>
+                            <input type="text" id="generated-password" readonly>
+                            <p><strong>Strength:</strong> <span id="generated-strength"></span></p>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('generated-password')">📋 Copy</button>
+                        </div>
+                    </div>
+
+                    <!-- Hash Calculator -->
+                    <div class="tool-card">
+                        <h3>#️⃣ Hash Calculator</h3>
+                        <div class="form-group">
+                            <label for="hash-file">Select File:</label>
+                            <input type="file" id="hash-file">
+                        </div>
+                        <div class="form-group">
+                            <label for="hash-algorithm">Algorithm:</label>
+                            <select id="hash-algorithm">
+                                <option value="md5">MD5</option>
+                                <option value="sha1">SHA-1</option>
+                                <option value="sha256" selected>SHA-256</option>
+                                <option value="sha512">SHA-512</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="calculateHash()">Calculate Hash</button>
+                        <div id="hash-result" class="result-box" style="display: none;">
+                            <p><strong>Algorithm:</strong> <span id="hash-algo"></span></p>
+                            <p><strong>Hash:</strong></p>
+                            <input type="text" id="hash-value" readonly>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('hash-value')">📋 Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div id="about-tab" class="tab-content">
+                <h2>ℹ️ About Secure CipherStegno Tool</h2>
+                <div class="about-content">
+                    <p><strong>Version:</strong> 3.1.0 - Enterprise-Grade Security Platform</p>
+                    <p><strong>Description:</strong> A comprehensive professional security platform combining advanced cryptography, steganography, AI-based analysis, and cloud services.</p>
+                    
+                    <h3>Features</h3>
+                    <ul>
+                        <li>🔐 Multiple encryption algorithms (Classical & Modern)</li>
+                        <li>🖼️ Image, Audio & Video steganography</li>
+                        <li>🛡️ Password security tools</li>
+                        <li>#️⃣ File integrity verification</li>
+                        <li>🌐 Three synchronized interfaces: GUI, CLI, and Web</li>
+                        <li>🔒 Privacy-first, local processing</li>
+                    </ul>
+                    
+                    <h3>Supported Algorithms</h3>
+                    <div class="algorithms-grid">
+                        <div>
+                            <h4>Classical Ciphers:</h4>
+                            <ul>
+                                <li>Caesar Cipher</li>
+                                <li>Vigenère Cipher</li>
+                                <li>Playfair Cipher</li>
+                                <li>Rail Fence Cipher</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Modern Encryption:</h4>
+                            <ul>
+                                <li>AES-256 (Recommended)</li>
+                                <li>RSA (2048/4096 bit)</li>
+                                <li>Blowfish</li>
+                                <li>3DES</li>
+                                <li>ChaCha20</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3>Author</h3>
+                    <p>Parth Thakar</p>
+                    <p><a href="https://github.com/parththakar2003/Secure-CipherStegno-Tool" target="_blank">GitHub Repository</a></p>
+                    
+                    <p class="license">Licensed under MIT License</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Secure CipherStegno Tool | All rights reserved | Privacy-first, Local Processing</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
