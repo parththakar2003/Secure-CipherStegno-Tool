@@ -150,25 +150,36 @@ This tool aligns perfectly with the **Screenpipe** mission of **privacy-first, l
 - **hashlib** — File integrity verification
 
 ### Project Structure
+
+**📁 Organized folder structure** - See [STRUCTURE.md](STRUCTURE.md) for detailed documentation
+
 ```
 Secure-CipherStegno-Tool/
-├── src/
-│   ├── core/            # Shared core operations (NEW!)
+├── apps/                # Application entry points
+│   ├── launch.py        # Unified launcher (recommended)
+│   ├── app.py           # GUI application
+│   ├── cli.py           # Command-line interface
+│   └── interactive_cli.py  # Interactive CLI
+├── scripts/             # Setup and utility scripts
+│   ├── setup.sh         # Linux/macOS setup
+│   ├── setup.bat        # Windows setup
+│   └── check_python.py  # Python version checker
+├── src/                 # Source code modules
+│   ├── core/            # Shared core operations
 │   ├── crypto/          # Cryptography modules
 │   ├── steganography/   # Steganography implementations
 │   ├── utils/           # Security and file utilities
-│   └── web/             # Web interface and API (NEW!)
+│   └── web/             # Web interface and API
 │       ├── api.py       # FastAPI backend
 │       ├── static/      # CSS and JavaScript
 │       └── templates/   # HTML templates
-├── tests/               # Unit tests
 ├── docs/                # Documentation
+│   ├── guides/          # User guides and tutorials
+│   └── submissions/     # Academic submission documents
+├── tests/               # Unit tests
 ├── examples/            # Sample files and usage examples
-├── launch.py           # Unified launcher (NOW IN: apps/)
-├── app.py              # Enhanced GUI application (NOW IN: apps/)
-├── cli.py              # Command-line interface (NOW IN: apps/)
-├── interactive_cli.py  # Interactive CLI (NOW IN: apps/)
-└── requirements.txt    # Python dependencies
+├── mobile/              # Mobile applications
+└── requirements.txt     # Python dependencies
 ```
 
 ---
