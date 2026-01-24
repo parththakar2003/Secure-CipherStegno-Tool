@@ -98,12 +98,12 @@
 ### User Interface
 - 🖥️ **Modern GUI** — Intuitive Tkinter interface with professional design
 - 🌐 **Web Interface** — Full-featured web-based interface with FastAPI backend (NEW!)
-- 🎨 **Interactive CLI** — Beautiful ANSI art-based command-line interface
-- 🌈 **Colorful Menus** — Enhanced visual experience with animations
+- 🎨 **Interactive CLI** — Beautiful ANSI art-based command-line interface with no code to type (ENHANCED!)
+- 🌈 **Colorful Menus** — Enhanced visual experience with animations and smart prompts
 - ⚡ **Progress Indicators** — Real-time feedback with spinners and progress bars
-- ⌨️ **CLI Support** — Full-featured command-line interface with arguments
-- 🔄 **Synchronized Interfaces** — All three interfaces (GUI, Web, CLI) use the same core operations
-- 📖 **Comprehensive Documentation** — Usage guides and examples
+- ⌨️ **CLI Support** — Full-featured command-line interface with arguments for automation
+- 🔄 **Synchronized Interfaces** — All interfaces (GUI, Web, CLI) use the same core operations
+- 📖 **Comprehensive Documentation** — Usage guides, CLI guide (CLI_GUIDE.md), and examples
 - 🧪 **Unit Tests** — Tested cryptography and utility functions
 - 📂 **Local-first execution** — No cloud storage or tracking
 
@@ -337,14 +337,19 @@ Then open your browser to `http://localhost:8000`
 - No page reloads needed
 - Privacy-first: all processing happens server-side, no data sent to cloud
 
-#### 3. Interactive CLI (🎨)
+#### 3. Interactive CLI (🎨 No Code to Type!)
+
+**Best for:** Beginners, visual learners, and anyone who prefers menus over commands
 
 Beautiful terminal interface with:
 - 🎨 Colorful ANSI art banners
-- 📱 Easy-to-use menu navigation
+- 📱 Easy-to-use menu navigation (just enter numbers!)
 - ⚡ Loading animations and progress bars
 - 🎯 Interactive prompts and confirmations
 - 🌈 Visual feedback with colors and icons
+- 💡 Built-in help and getting started guide
+- 📁 Automatic file detection and save prompts
+- ✨ No commands to memorize - just follow the menus!
 
 ```bash
 python3 launch.py interactive
@@ -353,17 +358,28 @@ python3 interactive_cli.py
 ```
 
 **Features:**
-- Visual menu-based navigation
-- Real-time encryption/decryption
+- Visual menu-based navigation (no typing commands!)
+- All cryptography algorithms with helpful descriptions
+- Step-by-step guided workflows
+- Real-time encryption/decryption with previews
 - Algorithm comparison tool
-- Password strength analysis
+- Password strength analysis with recommendations
 - Network security scanning
 - Token generation
-- And much more!
+- File input/output with smart detection
+- Comprehensive help system with tutorials
 
-#### 4. Traditional CLI
+**Perfect for:**
+- First-time users learning the tool
+- Quick operations without remembering syntax
+- Interactive exploration of features
+- Visual feedback and guidance
 
-For scripting and automation:
+#### 4. Traditional CLI (⚡ Power User Mode)
+
+**Best for:** Automation, scripting, CI/CD, and power users
+
+Command-line interface for automation and scripting:
 
 ```bash
 python3 launch.py cli --help
@@ -371,29 +387,84 @@ python3 launch.py cli --help
 python3 cli.py --help
 ```
 
+**Features:**
+- All operations accessible via command arguments
+- Perfect for shell scripts and automation
+- Batch processing support
+- CI/CD pipeline integration
+- Consistent, predictable output for parsing
+- Non-interactive mode for scripts
+
+**Perfect for:**
+- Automating encryption/decryption workflows
+- Batch processing multiple files
+- Integration with other tools and scripts
+- CI/CD pipelines and automated testing
+- Remote server operations via SSH
+
+### CLI Modes Comparison
+
+| Feature | Interactive CLI | Traditional CLI |
+|---------|----------------|-----------------|
+| **Learning Curve** | ⭐ Easy - No commands to learn | ⭐⭐ Moderate - Need to know commands |
+| **Best For** | Beginners, exploration | Automation, scripting |
+| **Interface** | Menu-based (select numbers) | Command arguments |
+| **Guidance** | Built-in help & tutorials | Man-page style help |
+| **File Handling** | Smart detection & prompts | Explicit paths required |
+| **Visual Feedback** | Colors, animations, progress | Plain text output |
+| **Automation** | Manual operation only | Full automation support |
+| **Speed** | Multiple steps per operation | Single command execution |
+
+**📖 For detailed CLI documentation, see [CLI_GUIDE.md](CLI_GUIDE.md)**
+
 ### CLI Usage Examples
 
-#### Encrypt with AES
+#### Interactive CLI Example
+```bash
+# Start interactive CLI
+python3 interactive_cli.py
+
+# Then simply:
+# 1. Select "Cryptography" (enter: 1)
+# 2. Select "Encrypt Message" (enter: 1)
+# 3. Select "AES-256" (enter: 6)
+# 4. Enter your message or file path
+# 5. Enter password
+# 6. Choose to save to file
+# Done! ✨
+```
+
+#### Traditional CLI Examples
+
+##### Encrypt with AES
 ```bash
 python3 cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "strongpassword"
 ```
 
-#### Hide message in image
+##### Hide message in image
 ```bash
 python3 cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png --compress
 ```
 
-#### Generate RSA keys
+##### Generate RSA keys
 ```bash
 python3 cli.py generate-keys --algorithm rsa --output-dir ./keys
 ```
 
-#### Calculate file hash
+##### Calculate file hash
 ```bash
 python3 cli.py hash --input document.pdf --algorithm sha256
 ```
 
-For detailed usage instructions, see [docs/USAGE.md](docs/USAGE.md)
+##### Decrypt with RSA
+```bash
+python3 cli.py decrypt --algorithm rsa --input encrypted.txt --output decrypted.txt --key ./keys/private_key.pem
+```
+
+**📖 For more examples and detailed usage, see:**
+- **Interactive CLI:** Start with `python3 interactive_cli.py` and explore the built-in help
+- **Traditional CLI:** See [CLI_GUIDE.md](CLI_GUIDE.md) for comprehensive documentation
+- **General Usage:** See [docs/USAGE.md](docs/USAGE.md)
 
 ### Running Tests
 
