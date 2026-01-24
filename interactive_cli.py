@@ -1072,10 +1072,11 @@ class InteractiveCLI:
                 message = message_input
                 if os.path.exists(message_input):
                     try:
-                        with open(message_input, 'r') as f:
+                        with open(message_input, 'r', encoding='utf-8') as f:
                             message = f.read()
                         print(f"{Fore.GREEN}  ✓ Message loaded from file{Style.RESET_ALL}")
-                    except Exception as e:
+                    except (UnicodeDecodeError, Exception) as e:
+                        print(f"{Fore.YELLOW}  ⚠ Using input as text message{Style.RESET_ALL}")
                         message = message_input
                 
                 output_file = InputHelper.get_input("Enter output video path", "stego_video.mp4")
