@@ -598,7 +598,7 @@ python cli.py validate-password --password "Test@123"
 
 ---
 
-**Version:** 3.1.0  
+**Version:** 3.2.0  
 **Last Updated:** January 2026  
 **License:** MIT
 

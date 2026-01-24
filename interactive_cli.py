@@ -6,6 +6,7 @@ No code to type - just select from menus!
 
 import sys
 import os
+import json
 
 # Check Python version before any other imports
 if sys.version_info < (3, 8):
@@ -17,7 +18,6 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from colorama import init, Fore, Style
 import time
-import json
 
 # Initialize colorama
 init(autoreset=True)
@@ -144,7 +144,10 @@ class InteractiveCLI:
         MenuFormatter.print_menu("Select Encryption Algorithm", algorithms, show_header=False)
         algo_choice = InputHelper.get_choice("Algorithm", range(1, len(algorithms) + 1))
         
-        if algo_choice is None or algo_choice == 11:  # Back option
+        # Back option is the last item (before the separator lines)
+        back_option_index = len([a for a in algorithms if a != '---']) - 1
+        
+        if algo_choice is None or algo_choice == back_option_index:  # Back option
             return
         
         # Get message
@@ -245,7 +248,6 @@ class InteractiveCLI:
                 
                 # Ask to save
                 filename = InputHelper.get_input("Save encrypted file as", "encrypted_aes.json")
-                import json
                 with open(filename, 'w') as f:
                     json.dump(result, f, indent=2)
                 
@@ -270,7 +272,6 @@ class InteractiveCLI:
                 
                 # Ask to save
                 filename = InputHelper.get_input("Save encrypted file as", "encrypted_blowfish.json")
-                import json
                 with open(filename, 'w') as f:
                     json.dump(result, f, indent=2)
                 
@@ -297,7 +298,6 @@ class InteractiveCLI:
                 
                 # Ask to save
                 filename = InputHelper.get_input("Save encrypted file as", "encrypted_3des.json")
-                import json
                 with open(filename, 'w') as f:
                     json.dump(result, f, indent=2)
                 
@@ -318,7 +318,6 @@ class InteractiveCLI:
                 
                 # Ask to save
                 filename = InputHelper.get_input("Save encrypted file as", "encrypted_chacha20.json")
-                import json
                 with open(filename, 'w') as f:
                     json.dump(result, f, indent=2)
                 
@@ -436,7 +435,10 @@ class InteractiveCLI:
         MenuFormatter.print_menu("Select Decryption Algorithm", algorithms, show_header=False)
         algo_choice = InputHelper.get_choice("Algorithm", range(1, len(algorithms) + 1))
         
-        if algo_choice is None or algo_choice == 11:  # Back option
+        # Back option is the last item (before the separator lines)
+        back_option_index = len([a for a in algorithms if a != '---']) - 1
+        
+        if algo_choice is None or algo_choice == back_option_index:  # Back option
             return
         
         print(f"\n{Fore.CYAN}{'─' * 70}{Style.RESET_ALL}")
@@ -1229,22 +1231,27 @@ class InteractiveCLI:
             clear_screen()
             MenuFormatter.print_section("ℹ️  HELP & INFORMATION", "ℹ️")
             
+            help_topics = [
+                "📖 About This Tool",
+                "🚀 Getting Started Guide",
+                "🔐 Cryptography Basics",
+                "🖼️  Steganography Basics",
+                "💡 Tips & Best Practices",
+                "⬅️  Back to Main Menu"
+            ]
+            
             MenuFormatter.print_menu(
                 "Help Topics",
-                [
-                    "📖 About This Tool",
-                    "🚀 Getting Started Guide",
-                    "🔐 Cryptography Basics",
-                    "🖼️  Steganography Basics",
-                    "💡 Tips & Best Practices",
-                    "⬅️  Back to Main Menu"
-                ],
+                help_topics,
                 show_header=False
             )
             
-            choice = InputHelper.get_choice("Select topic", range(1, 7))
+            choice = InputHelper.get_choice("Select topic", range(1, len(help_topics) + 1))
             
-            if choice == 5 or choice is None:
+            # Back option is the last item
+            back_option_index = len(help_topics) - 1
+            
+            if choice == back_option_index or choice is None:
                 break
             elif choice == 0:
                 self._show_about()
