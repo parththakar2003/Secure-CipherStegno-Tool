@@ -10,13 +10,13 @@ The web interface provides a modern, browser-based UI for all cryptography, steg
 
 ```bash
 # Start web server on default port (8000)
-python launch.py web
+python apps/launch.py web
 
 # Start on custom port
-python launch.py web --port 5000
+python apps/launch.py web --port 5000
 
 # Start on specific host
-python launch.py web --host 127.0.0.1 --port 8080
+python apps/launch.py web --host 127.0.0.1 --port 8080
 ```
 
 ### Method 2: Using Uvicorn Directly
@@ -113,13 +113,13 @@ The web interface uses the same core operations module (`src/core/operations.py`
 ### Port Configuration
 Default port is 8000. To change:
 ```bash
-python launch.py web --port YOUR_PORT
+python apps/launch.py web --port YOUR_PORT
 ```
 
 ### Host Configuration
 Default host is 0.0.0.0 (all interfaces). To restrict:
 ```bash
-python launch.py web --host 127.0.0.1  # Localhost only
+python apps/launch.py web --host 127.0.0.1  # Localhost only
 ```
 
 ## 🐛 Troubleshooting
@@ -127,7 +127,7 @@ python launch.py web --host 127.0.0.1  # Localhost only
 ### Port Already in Use
 ```bash
 # Use a different port
-python launch.py web --port 8888
+python apps/launch.py web --port 8888
 ```
 
 ### Module Not Found Errors

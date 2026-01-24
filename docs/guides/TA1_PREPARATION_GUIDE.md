@@ -246,16 +246,16 @@ This guide helps you prepare comprehensively for the TA-1 evaluation, which may 
 #### Scenario 4: CLI Demo (2 minutes)
 ```bash
 # Show CLI help
-python cli.py --help
+python apps/cli.py --help
 
 # Encrypt with AES
-python cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "test123"
+python apps/cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "test123"
 
 # Show encrypted file
 cat encrypted.json
 
 # Calculate hash
-python cli.py hash --input document.pdf --algorithm sha256
+python apps/cli.py hash --input document.pdf --algorithm sha256
 ```
 
 ---

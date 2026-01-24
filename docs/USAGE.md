@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 Run the enhanced graphical interface:
 ```bash
-python app.py
+python apps/app.py
 ```
 
 > **Note:** The legacy GUI (`index.py`) is deprecated but still functional. It will redirect to `app.py` automatically.
@@ -22,31 +22,31 @@ python app.py
 #### Caesar Cipher
 ```bash
 # Encrypt
-python cli.py encrypt --algorithm caesar --input "Hello World" --output encrypted.txt --shift 5
+python apps/cli.py encrypt --algorithm caesar --input "Hello World" --output encrypted.txt --shift 5
 
 # Decrypt
-python cli.py decrypt --algorithm caesar --input encrypted.txt --output decrypted.txt --shift 5
+python apps/cli.py decrypt --algorithm caesar --input encrypted.txt --output decrypted.txt --shift 5
 ```
 
 #### AES-256 Encryption
 ```bash
 # Encrypt a file
-python cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "strongpassword"
+python apps/cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "strongpassword"
 
 # Decrypt
-python cli.py decrypt --algorithm aes --input encrypted.json --output decrypted.txt --password "strongpassword"
+python apps/cli.py decrypt --algorithm aes --input encrypted.json --output decrypted.txt --password "strongpassword"
 ```
 
 #### RSA Encryption
 ```bash
 # Generate key pair
-python cli.py generate-keys --algorithm rsa --output-dir ./keys
+python apps/cli.py generate-keys --algorithm rsa --output-dir ./keys
 
 # Encrypt
-python cli.py encrypt --algorithm rsa --input message.txt --output encrypted.txt --key ./keys/public_key.pem
+python apps/cli.py encrypt --algorithm rsa --input message.txt --output encrypted.txt --key ./keys/public_key.pem
 
 # Decrypt
-python cli.py decrypt --algorithm rsa --input encrypted.txt --output decrypted.txt --key ./keys/private_key.pem
+python apps/cli.py decrypt --algorithm rsa --input encrypted.txt --output decrypted.txt --key ./keys/private_key.pem
 ```
 
 ### Steganography
@@ -54,35 +54,35 @@ python cli.py decrypt --algorithm rsa --input encrypted.txt --output decrypted.t
 #### Image Steganography
 ```bash
 # Hide message in image
-python cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png --compress
+python apps/cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png --compress
 
 # Extract message
-python cli.py stego-decode --type image --input stego.png --output extracted.txt --compressed
+python apps/cli.py stego-decode --type image --input stego.png --output extracted.txt --compressed
 ```
 
 #### Audio Steganography
 ```bash
 # Hide message in audio
-python cli.py stego-encode --type audio --cover music.wav --message secret.txt --output stego.wav
+python apps/cli.py stego-encode --type audio --cover music.wav --message secret.txt --output stego.wav
 
 # Extract message
-python cli.py stego-decode --type audio --input stego.wav --output extracted.txt
+python apps/cli.py stego-decode --type audio --input stego.wav --output extracted.txt
 ```
 
 ### Utility Commands
 
 #### File Hashing
 ```bash
-python cli.py hash --input document.pdf --algorithm sha256
+python apps/cli.py hash --input document.pdf --algorithm sha256
 ```
 
 #### Password Tools
 ```bash
 # Generate strong password
-python cli.py generate-password --length 20
+python apps/cli.py generate-password --length 20
 
 # Validate password strength
-python cli.py validate-password --password "MyP@ssw0rd"
+python apps/cli.py validate-password --password "MyP@ssw0rd"
 ```
 
 ## Python API Examples
