@@ -62,18 +62,18 @@ Examples:
     if args.interface == 'gui':
         print("🖥️  Launching GUI interface...")
         import app
-        sys.exit(0)
+        app.main()
     
     elif args.interface == 'cli':
         print("💻 Launching CLI interface...")
         sys.argv = ['cli.py'] + remaining
         import cli
-        sys.exit(0)
+        cli.main()
     
     elif args.interface == 'interactive':
         print("✨ Launching Interactive CLI...")
         import interactive_cli
-        sys.exit(0)
+        interactive_cli.main()
     
     elif args.interface == 'web':
         print(f"🌐 Launching Web interface...")
