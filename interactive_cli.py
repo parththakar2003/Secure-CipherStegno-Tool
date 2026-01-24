@@ -1075,7 +1075,7 @@ class InteractiveCLI:
                         with open(message_input, 'r', encoding='utf-8') as f:
                             message = f.read()
                         print(f"{Fore.GREEN}  ✓ Message loaded from file{Style.RESET_ALL}")
-                    except (UnicodeDecodeError, Exception) as e:
+                    except Exception as e:
                         print(f"{Fore.YELLOW}  ⚠ Using input as text message{Style.RESET_ALL}")
                         message = message_input
                 
@@ -1329,7 +1329,7 @@ class InteractiveCLI:
             # Offer to save hash
             if InputHelper.confirm("Save hash to file?", default=False):
                 output_file = InputHelper.get_input("Enter output filename", f"{file_name}.{algorithm}")
-                with open(output_file, 'w') as f:
+                with open(output_file, 'w', encoding='utf-8') as f:
                     f.write(f"File: {file_path}\n")
                     f.write(f"Algorithm: {algorithm.upper()}\n")
                     f.write(f"Hash: {hash_value}\n")
