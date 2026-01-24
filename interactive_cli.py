@@ -1036,7 +1036,9 @@ class InteractiveCLI:
                     MenuFormatter.print_info_box("Extraction Failed", [str(e)], "error")
         
         elif choice in [4, 5]:  # Video stego
-            MenuFormatter.print_section("🎬 VIDEO STEGANOGRAPHY", "🎬")
+            operation = "Hide" if choice == 4 else "Extract"
+            MenuFormatter.print_section(f"🎬 {operation.upper()} MESSAGE IN VIDEO", "🎬")
+            
             MenuFormatter.print_info_box(
                 "Video Steganography",
                 [
@@ -1050,6 +1052,116 @@ class InteractiveCLI:
                 ],
                 "info"
             )
+            
+            if choice == 4:  # Hide in video
+                cover_video = InputHelper.get_input("Enter cover video path (MP4/AVI)")
+                
+                if not os.path.exists(cover_video):
+                    print(f"{Fore.RED}  ✗ Cover video not found{Style.RESET_ALL}")
+                    input(f"{Fore.YELLOW}  Press Enter to continue...{Style.RESET_ALL}")
+                    return
+                
+                message_input = InputHelper.get_input("Enter message or file path")
+                
+                if not message_input:
+                    print(f"{Fore.RED}  ✗ No message provided{Style.RESET_ALL}")
+                    input(f"{Fore.YELLOW}  Press Enter to continue...{Style.RESET_ALL}")
+                    return
+                
+                # Check if message is a file
+                message = message_input
+                if os.path.exists(message_input):
+                    try:
+                        with open(message_input, 'r') as f:
+                            message = f.read()
+                        print(f"{Fore.GREEN}  ✓ Message loaded from file{Style.RESET_ALL}")
+                    except Exception as e:
+                        message = message_input
+                
+                output_file = InputHelper.get_input("Enter output video path", "stego_video.mp4")
+                
+                try:
+                    print(f"\n{Fore.YELLOW}  ⚠ This may take several minutes...{Style.RESET_ALL}")
+                    Animations.loading_spinner(2, "Encoding message into video")
+                    result = VideoSteganography.encode(cover_video, message, output_file)
+                    
+                    MenuFormatter.print_info_box(
+                        "Message Hidden Successfully",
+                        [
+                            f"✓ Stego video saved as: {output_file}",
+                            f"✓ Message size: {result['message_size']} bytes",
+                            f"✓ Frames used: {result['frames_used']} / {result['total_frames']}",
+                            "",
+                            "The video looks identical to the original!"
+                        ],
+                        "success"
+                    )
+                except RuntimeError as e:
+                    if "ffmpeg" in str(e):
+                        MenuFormatter.print_info_box(
+                            "FFmpeg Not Found",
+                            [
+                                "Video steganography requires ffmpeg to be installed.",
+                                "",
+                                "Install ffmpeg:",
+                                "  • Ubuntu/Debian: sudo apt-get install ffmpeg",
+                                "  • macOS: brew install ffmpeg",
+                                "  • Windows: Download from ffmpeg.org"
+                            ],
+                            "error"
+                        )
+                    else:
+                        MenuFormatter.print_info_box("Encoding Failed", [str(e)], "error")
+                except Exception as e:
+                    MenuFormatter.print_info_box("Encoding Failed", [str(e)], "error")
+            
+            else:  # Extract from video
+                stego_video = InputHelper.get_input("Enter stego video path (MP4/AVI)")
+                
+                if not os.path.exists(stego_video):
+                    print(f"{Fore.RED}  ✗ Stego video not found{Style.RESET_ALL}")
+                    input(f"{Fore.YELLOW}  Press Enter to continue...{Style.RESET_ALL}")
+                    return
+                
+                try:
+                    print(f"\n{Fore.YELLOW}  ⚠ This may take several minutes...{Style.RESET_ALL}")
+                    Animations.loading_spinner(2, "Extracting hidden message from video")
+                    message = VideoSteganography.decode(stego_video)
+                    
+                    MenuFormatter.print_info_box(
+                        "Message Extracted Successfully",
+                        [
+                            "Hidden message:",
+                            "",
+                            message[:300] + ("..." if len(message) > 300 else "")
+                        ],
+                        "success"
+                    )
+                    
+                    if InputHelper.confirm("Save extracted message to file?", default=True):
+                        output_file = InputHelper.get_input("Enter output filename", "extracted_video_message.txt")
+                        with open(output_file, 'w') as f:
+                            f.write(message)
+                        print(f"{Fore.GREEN}  ✓ Message saved to {output_file}{Style.RESET_ALL}")
+                
+                except RuntimeError as e:
+                    if "ffmpeg" in str(e):
+                        MenuFormatter.print_info_box(
+                            "FFmpeg Not Found",
+                            [
+                                "Video steganography requires ffmpeg to be installed.",
+                                "",
+                                "Install ffmpeg:",
+                                "  • Ubuntu/Debian: sudo apt-get install ffmpeg",
+                                "  • macOS: brew install ffmpeg",
+                                "  • Windows: Download from ffmpeg.org"
+                            ],
+                            "error"
+                        )
+                    else:
+                        MenuFormatter.print_info_box("Extraction Failed", [str(e)], "error")
+                except Exception as e:
+                    MenuFormatter.print_info_box("Extraction Failed", [str(e)], "error")
         
         input(f"\n{Fore.YELLOW}  Press Enter to continue...{Style.RESET_ALL}")
     
@@ -1153,7 +1265,78 @@ class InteractiveCLI:
         clear_screen()
         MenuFormatter.print_section("#️⃣ FILE HASH CALCULATOR", "#️⃣")
         
-        print(f"{Fore.CYAN}  File hash calculation feature{Style.RESET_ALL}")
+        MenuFormatter.print_info_box(
+            "File Hash Calculator",
+            [
+                "Calculate cryptographic hash of any file.",
+                "",
+                "Supported algorithms:",
+                "  • MD5 (128-bit)",
+                "  • SHA-1 (160-bit)",
+                "  • SHA-256 (256-bit) - Recommended",
+                "  • SHA-512 (512-bit)",
+                "",
+                "Useful for file integrity verification."
+            ],
+            "info"
+        )
+        
+        # Get file path
+        file_path = InputHelper.get_input("Enter file path to hash")
+        
+        if not file_path:
+            return
+        
+        if not os.path.exists(file_path):
+            print(f"{Fore.RED}  ✗ File not found{Style.RESET_ALL}")
+            input(f"{Fore.YELLOW}  Press Enter to continue...{Style.RESET_ALL}")
+            return
+        
+        # Select algorithm
+        print(f"\n{Fore.CYAN}  Select hash algorithm:{Style.RESET_ALL}")
+        print(f"{Fore.WHITE}    1. MD5{Style.RESET_ALL}")
+        print(f"{Fore.WHITE}    2. SHA-1{Style.RESET_ALL}")
+        print(f"{Fore.WHITE}    3. SHA-256 (recommended){Style.RESET_ALL}")
+        print(f"{Fore.WHITE}    4. SHA-512{Style.RESET_ALL}")
+        
+        algo_choice = InputHelper.get_choice("Select algorithm", range(1, 5))
+        
+        algorithms = {0: 'md5', 1: 'sha1', 2: 'sha256', 3: 'sha512'}
+        algorithm = algorithms.get(algo_choice, 'sha256')
+        
+        # Calculate hash
+        try:
+            Animations.loading_spinner(1, f"Calculating {algorithm.upper()} hash")
+            hash_value = calculate_file_hash(file_path, algorithm)
+            
+            # Get file info
+            file_size = os.path.getsize(file_path)
+            file_name = os.path.basename(file_path)
+            
+            MenuFormatter.print_info_box(
+                "Hash Calculated Successfully",
+                [
+                    f"File: {file_name}",
+                    f"Size: {file_size:,} bytes",
+                    f"Algorithm: {algorithm.upper()}",
+                    "",
+                    f"Hash: {hash_value}"
+                ],
+                "success"
+            )
+            
+            # Offer to save hash
+            if InputHelper.confirm("Save hash to file?", default=False):
+                output_file = InputHelper.get_input("Enter output filename", f"{file_name}.{algorithm}")
+                with open(output_file, 'w') as f:
+                    f.write(f"File: {file_path}\n")
+                    f.write(f"Algorithm: {algorithm.upper()}\n")
+                    f.write(f"Hash: {hash_value}\n")
+                print(f"{Fore.GREEN}  ✓ Hash saved to {output_file}{Style.RESET_ALL}")
+        
+        except Exception as e:
+            MenuFormatter.print_info_box("Hash Calculation Failed", [str(e)], "error")
+        
         input(f"\n{Fore.YELLOW}  Press Enter to continue...{Style.RESET_ALL}")
     
     def _scan_ports(self):
