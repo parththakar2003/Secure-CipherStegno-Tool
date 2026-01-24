@@ -31,12 +31,20 @@ if sys.version_info < (3, 8):
 
 # Read README for long description
 def read_file(filename):
-    with open(filename, 'r', encoding='utf-8') as f:
+    # Get the parent directory of the scripts folder
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.dirname(script_dir)
+    filepath = os.path.join(repo_root, filename)
+    with open(filepath, 'r', encoding='utf-8') as f:
         return f.read()
 
 # Read requirements
 def read_requirements(filename):
-    with open(filename, 'r', encoding='utf-8') as f:
+    # Get the parent directory of the scripts folder
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.dirname(script_dir)
+    filepath = os.path.join(repo_root, filename)
+    with open(filepath, 'r', encoding='utf-8') as f:
         return [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 setup(
@@ -92,8 +100,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'cipherstegno=cli:main',
-            'cipherstegno-gui=app:main',
+            'cipherstegno=apps.cli:main',
+            'cipherstegno-gui=apps.app:main',
         ],
     },
     include_package_data=True,

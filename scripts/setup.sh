@@ -18,13 +18,17 @@ fi
 
 # Check Python version
 echo "Checking Python version..."
-if [ ! -f "check_python.py" ]; then
-    echo "❌ Error: check_python.py not found"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$REPO_ROOT"
+
+if [ ! -f "scripts/check_python.py" ]; then
+    echo "❌ Error: scripts/check_python.py not found"
     echo "Please make sure you're in the Secure-CipherStegno-Tool directory"
     exit 1
 fi
 
-python3 check_python.py
+python3 scripts/check_python.py
 if [ $? -ne 0 ]; then
     echo ""
     echo "❌ Python version check failed"
@@ -61,16 +65,16 @@ echo ""
 echo "  2. Choose your interface:"
 echo ""
 echo "     📱 Unified Launcher (Recommended):"
-echo "        python launch.py gui           # GUI interface"
-echo "        python launch.py interactive   # Interactive CLI"
-echo "        python launch.py web           # Web interface"
-echo "        python launch.py cli --help    # Command-line"
+echo "        python apps/launch.py gui           # GUI interface"
+echo "        python apps/launch.py interactive   # Interactive CLI"
+echo "        python apps/launch.py web           # Web interface"
+echo "        python apps/launch.py cli --help    # Command-line"
 echo ""
 echo "     🖥️  Direct Interface Launch:"
-echo "        python app.py                  # GUI application"
-echo "        python interactive_cli.py      # Interactive CLI"
-echo "        python cli.py --help           # Command-line"
-echo "        python src/web/api.py          # Web server"
+echo "        python apps/app.py                  # GUI application"
+echo "        python apps/interactive_cli.py      # Interactive CLI"
+echo "        python apps/cli.py --help           # Command-line"
+echo "        python src/web/api.py               # Web server"
 echo ""
 echo "  3. When done, deactivate the virtual environment:"
 echo "     deactivate"

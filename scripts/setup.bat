@@ -17,13 +17,14 @@ if errorlevel 1 (
 
 REM Check Python version
 echo Checking Python version...
-if not exist check_python.py (
-    echo Error: check_python.py not found
+cd /d %~dp0..
+if not exist scripts\check_python.py (
+    echo Error: scripts\check_python.py not found
     echo Please make sure you're in the Secure-CipherStegno-Tool directory
     exit /b 1
 )
 
-python check_python.py
+python scripts\check_python.py
 if errorlevel 1 (
     echo.
     echo Python version check failed
@@ -58,10 +59,13 @@ echo   1. Activate the virtual environment:
 echo      venv\Scripts\activate.bat
 echo.
 echo   2. Run the GUI application:
-echo      python app.py
+echo      python apps\app.py
 echo.
 echo   3. Or use the CLI:
-echo      python cli.py --help
+echo      python apps\cli.py --help
+echo.
+echo   4. Or use the unified launcher:
+echo      python apps\launch.py gui
 echo.
 echo   4. When done, deactivate the virtual environment:
 echo      deactivate

@@ -4,7 +4,7 @@ Secure CipherStegno Tool provides **4 different interfaces** to suit your workfl
 
 ## 🚀 Quick Start
 
-After running `./setup.sh`, activate the virtual environment:
+After running `./scripts/setup.sh`, activate the virtual environment:
 ```bash
 source venv/bin/activate
 ```
@@ -15,25 +15,25 @@ The easiest way to launch any interface:
 
 ```bash
 # Launch GUI
-python launch.py gui
+python apps/launch.py gui
 
 # Launch Interactive CLI
-python launch.py interactive
+python apps/launch.py interactive
 
 # Launch Web Interface
-python launch.py web
+python apps/launch.py web
 
 # Launch Command-line Interface
-python launch.py cli --help
+python apps/launch.py cli --help
 ```
 
 ### Web Interface Options
 ```bash
 # Custom port
-python launch.py web --port 5000
+python apps/launch.py web --port 5000
 
 # Custom host and port
-python launch.py web --host 127.0.0.1 --port 8080
+python apps/launch.py web --host 127.0.0.1 --port 8080
 ```
 
 ## 🖥️ 2. GUI Interface (Tkinter)
@@ -41,7 +41,7 @@ python launch.py web --host 127.0.0.1 --port 8080
 **Desktop application with graphical interface**
 
 ```bash
-python app.py
+python apps/app.py
 ```
 
 **Features:**
@@ -64,35 +64,35 @@ python app.py
 **Scriptable command-line interface for automation**
 
 ```bash
-python cli.py --help
+python apps/cli.py --help
 ```
 
 **Common Commands:**
 
 ```bash
 # Encrypt text with AES
-python cli.py encrypt --algorithm aes --input message.txt --output encrypted.bin --password mypass
+python apps/cli.py encrypt --algorithm aes --input message.txt --output encrypted.bin --password mypass
 
 # Decrypt text
-python cli.py decrypt --algorithm aes --input encrypted.bin --password mypass
+python apps/cli.py decrypt --algorithm aes --input encrypted.bin --password mypass
 
 # Hide message in image
-python cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png
+python apps/cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png
 
 # Extract message from image
-python cli.py stego-decode --type image --input stego.png
+python apps/cli.py stego-decode --type image --input stego.png
 
 # Generate RSA keys
-python cli.py generate-keys --algorithm rsa --output-dir ./keys
+python apps/cli.py generate-keys --algorithm rsa --output-dir ./keys
 
 # Calculate file hash
-python cli.py hash --file document.pdf --algorithm sha256
+python apps/cli.py hash --file document.pdf --algorithm sha256
 
 # Generate strong password
-python cli.py generate-password --length 20
+python apps/cli.py generate-password --length 20
 
 # Validate password strength
-python cli.py validate-password
+python apps/cli.py validate-password
 ```
 
 **Perfect for:**
