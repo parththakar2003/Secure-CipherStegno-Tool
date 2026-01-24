@@ -49,15 +49,15 @@ Created a complete web-based interface with modern design:
 - 🔔 Toast notifications
 - 📥 File upload/download
 
-### 3. Unified Launcher (`launch.py`)
+### 3. Unified Launcher (`apps/launch.py`)
 
 Created a single entry point for all interfaces:
 
 ```bash
-python launch.py gui          # Tkinter GUI
-python launch.py web          # Web interface
-python launch.py interactive  # Interactive CLI
-python launch.py cli --help   # Traditional CLI
+python apps/launch.py gui          # Tkinter GUI
+python apps/launch.py web          # Web interface
+python apps/launch.py interactive  # Interactive CLI
+python apps/launch.py cli --help   # Traditional CLI
 ```
 
 ### 4. Documentation
@@ -99,7 +99,7 @@ All three interfaces now use the same core operations:
 3. `src/web/templates/index.html` - Web interface HTML (400+ lines)
 4. `src/web/static/css/style.css` - Responsive CSS (300+ lines)
 5. `src/web/static/js/app.js` - Frontend JavaScript (1100+ lines)
-6. `launch.py` - Unified launcher (100+ lines)
+6. `apps/launch.py` - Unified launcher (100+ lines)
 7. `docs/WEB_INTERFACE_GUIDE.md` - Web interface guide
 
 ## Files Modified
@@ -135,7 +135,7 @@ All three interfaces now use the same core operations:
 pip install -r requirements.txt
 
 # Start web server
-python launch.py web
+python apps/launch.py web
 
 # Open browser to http://localhost:8000
 ```
@@ -143,19 +143,19 @@ python launch.py web
 ### Start GUI
 
 ```bash
-python launch.py gui
+python apps/launch.py gui
 ```
 
 ### Start Interactive CLI
 
 ```bash
-python launch.py interactive
+python apps/launch.py interactive
 ```
 
 ### Start Traditional CLI
 
 ```bash
-python launch.py cli --help
+python apps/launch.py cli --help
 ```
 
 ## Technical Stack

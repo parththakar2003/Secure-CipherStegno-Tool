@@ -11,12 +11,12 @@
 **🚨 URGENT: Abstract submission TODAY by 1:00 PM for guide allocation!**
 
 **📋 For students - Start here:**
-- **[QUICK_ACTION_GUIDE.md](QUICK_ACTION_GUIDE.md)** — ⚡ **START HERE**: Quick reference for what to do NOW (5-min read)
+- **[QUICK_ACTION_GUIDE.md](docs/guides/QUICK_ACTION_GUIDE.md)** — ⚡ **START HERE**: Quick reference for what to do NOW (5-min read)
 
 **📚 Detailed Documentation:**
-- **[PROJECT_REQUIREMENTS_CLARIFICATION.md](PROJECT_REQUIREMENTS_CLARIFICATION.md)** — **MUST READ**: Critical guidelines on research requirements, existing implementations, new contributions, and guide allocation
-- **[TA1_PREPARATION_GUIDE.md](TA1_PREPARATION_GUIDE.md)** — Complete preparation guide for TA-1 evaluation (February 2026)
-- **[ABSTRACT_SUBMISSION.md](ABSTRACT_SUBMISSION.md)** — Updated abstract template with existing work vs. new contributions clearly documented
+- **[PROJECT_REQUIREMENTS_CLARIFICATION.md](docs/submissions/PROJECT_REQUIREMENTS_CLARIFICATION.md)** — **MUST READ**: Critical guidelines on research requirements, existing implementations, new contributions, and guide allocation
+- **[TA1_PREPARATION_GUIDE.md](docs/guides/TA1_PREPARATION_GUIDE.md)** — Complete preparation guide for TA-1 evaluation (February 2026)
+- **[ABSTRACT_SUBMISSION.md](docs/submissions/ABSTRACT_SUBMISSION.md)** — Updated abstract template with existing work vs. new contributions clearly documented
 
 **⚠️ Key Requirements:**
 1. ✅ Project must be **practical + research-focused** (both required)
@@ -103,7 +103,7 @@
 - ⚡ **Progress Indicators** — Real-time feedback with spinners and progress bars
 - ⌨️ **CLI Support** — Full-featured command-line interface with arguments for automation
 - 🔄 **Synchronized Interfaces** — All interfaces (GUI, Web, CLI) use the same core operations
-- 📖 **Comprehensive Documentation** — Usage guides, CLI guide (CLI_GUIDE.md), and examples
+- 📖 **Comprehensive Documentation** — Usage guides, CLI guide (docs/guides/CLI_GUIDE.md), and examples
 - 🧪 **Unit Tests** — Tested cryptography and utility functions
 - 📂 **Local-first execution** — No cloud storage or tracking
 
@@ -150,25 +150,36 @@ This tool aligns perfectly with the **Screenpipe** mission of **privacy-first, l
 - **hashlib** — File integrity verification
 
 ### Project Structure
+
+**📁 Organized folder structure** - See [STRUCTURE.md](STRUCTURE.md) for detailed documentation
+
 ```
 Secure-CipherStegno-Tool/
-├── src/
-│   ├── core/            # Shared core operations (NEW!)
+├── apps/                # Application entry points
+│   ├── launch.py        # Unified launcher (recommended)
+│   ├── app.py           # GUI application
+│   ├── cli.py           # Command-line interface
+│   └── interactive_cli.py  # Interactive CLI
+├── scripts/             # Setup and utility scripts
+│   ├── setup.sh         # Linux/macOS setup
+│   ├── setup.bat        # Windows setup
+│   └── check_python.py  # Python version checker
+├── src/                 # Source code modules
+│   ├── core/            # Shared core operations
 │   ├── crypto/          # Cryptography modules
 │   ├── steganography/   # Steganography implementations
 │   ├── utils/           # Security and file utilities
-│   └── web/             # Web interface and API (NEW!)
+│   └── web/             # Web interface and API
 │       ├── api.py       # FastAPI backend
 │       ├── static/      # CSS and JavaScript
 │       └── templates/   # HTML templates
-├── tests/               # Unit tests
 ├── docs/                # Documentation
+│   ├── guides/          # User guides and tutorials
+│   └── submissions/     # Academic submission documents
+├── tests/               # Unit tests
 ├── examples/            # Sample files and usage examples
-├── launch.py           # Unified launcher (NEW!)
-├── app.py              # Enhanced GUI application
-├── cli.py              # Command-line interface
-├── interactive_cli.py  # Interactive CLI
-└── requirements.txt    # Python dependencies
+├── mobile/              # Mobile applications
+└── requirements.txt     # Python dependencies
 ```
 
 ---
@@ -211,14 +222,14 @@ git clone https://github.com/parththakar2003/Secure-CipherStegno-Tool.git
 cd Secure-CipherStegno-Tool
 
 # Run the setup script (creates virtual environment and installs dependencies)
-chmod +x setup.sh
-./setup.sh
+chmod +x scripts/setup.sh
+./scripts/setup.sh
 
 # Activate the virtual environment
 source venv/bin/activate
 
 # Run the application
-python app.py
+python apps/app.py
 ```
 
 **Windows:**
@@ -228,13 +239,13 @@ git clone https://github.com/parththakar2003/Secure-CipherStegno-Tool.git
 cd Secure-CipherStegno-Tool
 
 # Run the setup script (creates virtual environment and installs dependencies)
-setup.bat
+scripts\setup.bat
 
 # Activate the virtual environment
 venv\Scripts\activate.bat
 
 # Run the application
-python app.py
+python apps\app.py
 ```
 
 #### Manual Setup
@@ -248,7 +259,7 @@ cd Secure-CipherStegno-Tool
 
 # STEP 1: Verify Python version (REQUIRED: 3.8+)
 # This is the MOST IMPORTANT step - the tool will not work with Python 2.7!
-python3 check_python.py
+python3 scripts/check_python.py
 
 # If you see an error, you need to install Python 3.8 or higher:
 # - Visit: https://www.python.org/downloads/
@@ -271,24 +282,24 @@ pip install -r requirements.txt
 
 # STEP 5: Run the application
 # Unified Launcher (Recommended - NEW!)
-python launch.py gui          # Launch GUI interface
-python launch.py web          # Launch web interface (http://localhost:8000)
-python launch.py interactive  # Launch interactive CLI
-python launch.py cli --help   # Traditional CLI with arguments
+python apps/launch.py gui          # Launch GUI interface
+python apps/launch.py web          # Launch web interface (http://localhost:8000)
+python apps/launch.py interactive  # Launch interactive CLI
+python apps/launch.py cli --help   # Traditional CLI with arguments
 
 # Or run interfaces directly:
 # Option 1: Enhanced GUI application
-python app.py
+python apps/app.py
 
 # Option 2: Web Interface (NEW!)
 python -m uvicorn src.web.api:app --host 0.0.0.0 --port 8000
 # Then open browser to http://localhost:8000
 
 # Option 3: Interactive CLI with beautiful menus and ANSI art
-python interactive_cli.py
+python apps/interactive_cli.py
 
 # Option 4: Traditional command-line interface
-python cli.py --help
+python apps/cli.py --help
 ```
 
 **Important Notes:**
@@ -308,9 +319,9 @@ The enhanced GUI provides a modern, user-friendly interface with three main tabs
 3. **Security Tools** — Password tools, hash calculator, file verification
 
 ```bash
-python3 launch.py gui
+python3 apps/launch.py gui
 # or
-python3 app.py
+python3 apps/app.py
 ```
 
 #### 2. Web Interface (NEW! 🌐)
@@ -324,7 +335,7 @@ Full-featured web-based interface with modern design:
 - ⚡ Real-time operations with loading indicators
 
 ```bash
-python3 launch.py web --port 8000
+python3 apps/launch.py web --port 8000
 # or
 python3 -m uvicorn src.web.api:app --host 0.0.0.0 --port 8000
 ```

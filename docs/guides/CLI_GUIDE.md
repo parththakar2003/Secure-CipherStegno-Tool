@@ -32,20 +32,20 @@ pip install -r requirements.txt
 ### Basic Usage
 
 ```bash
-python cli.py [command] [options]
+python apps/cli.py [command] [options]
 ```
 
 To see all available commands:
 
 ```bash
-python cli.py --help
+python apps/cli.py --help
 ```
 
 To see help for a specific command:
 
 ```bash
-python cli.py encrypt --help
-python cli.py stego-encode --help
+python apps/cli.py encrypt --help
+python apps/cli.py stego-encode --help
 ```
 
 ---
@@ -59,19 +59,19 @@ python cli.py stego-encode --help
 #### Encrypt
 
 ```bash
-python cli.py encrypt --algorithm caesar --input "Hello World" --output encrypted.txt --shift 5
+python apps/cli.py encrypt --algorithm caesar --input "Hello World" --output encrypted.txt --shift 5
 ```
 
 Or encrypt from a file:
 
 ```bash
-python cli.py encrypt --algorithm caesar --input message.txt --output encrypted.txt --shift 3
+python apps/cli.py encrypt --algorithm caesar --input message.txt --output encrypted.txt --shift 3
 ```
 
 #### Decrypt
 
 ```bash
-python cli.py decrypt --algorithm caesar --input encrypted.txt --output decrypted.txt --shift 5
+python apps/cli.py decrypt --algorithm caesar --input encrypted.txt --output decrypted.txt --shift 5
 ```
 
 **Parameters:**
@@ -89,13 +89,13 @@ python cli.py decrypt --algorithm caesar --input encrypted.txt --output decrypte
 #### Encrypt
 
 ```bash
-python cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "your-strong-password"
+python apps/cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "your-strong-password"
 ```
 
 #### Decrypt
 
 ```bash
-python cli.py decrypt --algorithm aes --input encrypted.json --output decrypted.txt --password "your-strong-password"
+python apps/cli.py decrypt --algorithm aes --input encrypted.json --output decrypted.txt --password "your-strong-password"
 ```
 
 **Parameters:**
@@ -118,7 +118,7 @@ python cli.py decrypt --algorithm aes --input encrypted.json --output decrypted.
 #### Generate Key Pair
 
 ```bash
-python cli.py generate-keys --algorithm rsa --output-dir ./keys --key-size 2048
+python apps/cli.py generate-keys --algorithm rsa --output-dir ./keys --key-size 2048
 ```
 
 Available key sizes:
@@ -128,13 +128,13 @@ Available key sizes:
 #### Encrypt with Public Key
 
 ```bash
-python cli.py encrypt --algorithm rsa --input message.txt --output encrypted.txt --key ./keys/public_key.pem
+python apps/cli.py encrypt --algorithm rsa --input message.txt --output encrypted.txt --key ./keys/public_key.pem
 ```
 
 #### Decrypt with Private Key
 
 ```bash
-python cli.py decrypt --algorithm rsa --input encrypted.txt --output decrypted.txt --key ./keys/private_key.pem
+python apps/cli.py decrypt --algorithm rsa --input encrypted.txt --output decrypted.txt --key ./keys/private_key.pem
 ```
 
 **Parameters:**
@@ -156,7 +156,7 @@ python cli.py decrypt --algorithm rsa --input encrypted.txt --output decrypted.t
 All decryption commands follow the same pattern as encryption but use the `decrypt` subcommand:
 
 ```bash
-python cli.py decrypt --algorithm [caesar|aes|rsa] --input [encrypted-file] --output [output-file] [algorithm-specific-options]
+python apps/cli.py decrypt --algorithm [caesar|aes|rsa] --input [encrypted-file] --output [output-file] [algorithm-specific-options]
 ```
 
 See [Encryption Commands](#encryption-commands) for algorithm-specific examples.
@@ -172,25 +172,25 @@ See [Encryption Commands](#encryption-commands) for algorithm-specific examples.
 #### Hide Message in Image
 
 ```bash
-python cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png
+python apps/cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png
 ```
 
 With compression (recommended for larger messages):
 
 ```bash
-python cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png --compress
+python apps/cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png --compress
 ```
 
 #### Extract Message from Image
 
 ```bash
-python cli.py stego-decode --type image --input stego.png --output extracted.txt
+python apps/cli.py stego-decode --type image --input stego.png --output extracted.txt
 ```
 
 If message was compressed:
 
 ```bash
-python cli.py stego-decode --type image --input stego.png --output extracted.txt --compressed
+python apps/cli.py stego-decode --type image --input stego.png --output extracted.txt --compressed
 ```
 
 **Parameters:**
@@ -215,13 +215,13 @@ python cli.py stego-decode --type image --input stego.png --output extracted.txt
 #### Hide Message in Audio
 
 ```bash
-python cli.py stego-encode --type audio --cover music.wav --message secret.txt --output stego.wav
+python apps/cli.py stego-encode --type audio --cover music.wav --message secret.txt --output stego.wav
 ```
 
 #### Extract Message from Audio
 
 ```bash
-python cli.py stego-decode --type audio --input stego.wav --output extracted.txt
+python apps/cli.py stego-decode --type audio --input stego.wav --output extracted.txt
 ```
 
 **Parameters:**
@@ -244,10 +244,10 @@ Generate cryptographic keys for various algorithms.
 
 ```bash
 # Standard 2048-bit keys
-python cli.py generate-keys --algorithm rsa --output-dir ./keys
+python apps/cli.py generate-keys --algorithm rsa --output-dir ./keys
 
 # High-security 4096-bit keys
-python cli.py generate-keys --algorithm rsa --output-dir ./keys --key-size 4096
+python apps/cli.py generate-keys --algorithm rsa --output-dir ./keys --key-size 4096
 ```
 
 **Output:**
@@ -257,7 +257,7 @@ python cli.py generate-keys --algorithm rsa --output-dir ./keys --key-size 4096
 ### AES Key
 
 ```bash
-python cli.py generate-keys --algorithm aes --output-dir ./keys
+python apps/cli.py generate-keys --algorithm aes --output-dir ./keys
 ```
 
 **Output:**
@@ -274,12 +274,12 @@ Calculate cryptographic hash of any file for integrity verification.
 
 ```bash
 # SHA-256 (recommended)
-python cli.py hash --input document.pdf --algorithm sha256
+python apps/cli.py hash --input document.pdf --algorithm sha256
 
 # Other algorithms
-python cli.py hash --input file.txt --algorithm md5
-python cli.py hash --input file.txt --algorithm sha1
-python cli.py hash --input file.txt --algorithm sha512
+python apps/cli.py hash --input file.txt --algorithm md5
+python apps/cli.py hash --input file.txt --algorithm sha1
+python apps/cli.py hash --input file.txt --algorithm sha512
 ```
 
 **Available Algorithms:**
@@ -301,10 +301,10 @@ Generate cryptographically secure random passwords.
 
 ```bash
 # Generate 16-character password (default)
-python cli.py generate-password
+python apps/cli.py generate-password
 
 # Custom length
-python cli.py generate-password --length 24
+python apps/cli.py generate-password --length 24
 ```
 
 **Features:**
@@ -320,10 +320,10 @@ Check password strength and get improvement recommendations.
 
 ```bash
 # With password argument
-python cli.py validate-password --password "MyP@ssw0rd"
+python apps/cli.py validate-password --password "MyP@ssw0rd"
 
 # Interactive (secure, doesn't show password)
-python cli.py validate-password
+python apps/cli.py validate-password
 ```
 
 **Output:**
@@ -348,10 +348,10 @@ Send an encrypted file to someone with their RSA public key:
 
 ```bash
 # Encrypt file with recipient's public key
-python cli.py encrypt --algorithm rsa --input confidential.pdf --output encrypted.bin --key recipient_public.pem
+python apps/cli.py encrypt --algorithm rsa --input confidential.pdf --output encrypted.bin --key recipient_public.pem
 
 # Recipient decrypts with their private key
-python cli.py decrypt --algorithm rsa --input encrypted.bin --output confidential.pdf --key my_private.pem
+python apps/cli.py decrypt --algorithm rsa --input encrypted.bin --output confidential.pdf --key my_private.pem
 ```
 
 ---
@@ -360,14 +360,14 @@ python cli.py decrypt --algorithm rsa --input encrypted.bin --output confidentia
 
 ```bash
 # 1. Encrypt the message first
-python cli.py encrypt --algorithm aes --input secret.txt --output encrypted.json --password "mypassword"
+python apps/cli.py encrypt --algorithm aes --input secret.txt --output encrypted.json --password "mypassword"
 
 # 2. Hide encrypted message in image
-python cli.py stego-encode --type image --cover vacation.png --message encrypted.json --output photo.png --compress
+python apps/cli.py stego-encode --type image --cover vacation.png --message encrypted.json --output photo.png --compress
 
 # 3. Extract and decrypt
-python cli.py stego-decode --type image --input photo.png --output encrypted.json --compressed
-python cli.py decrypt --algorithm aes --input encrypted.json --output secret.txt --password "mypassword"
+python apps/cli.py stego-decode --type image --input photo.png --output encrypted.json --compressed
+python apps/cli.py decrypt --algorithm aes --input encrypted.json --output secret.txt --password "mypassword"
 ```
 
 ---
@@ -376,11 +376,11 @@ python cli.py decrypt --algorithm aes --input encrypted.json --output secret.txt
 
 ```bash
 # Before sending
-python cli.py hash --input document.pdf --algorithm sha256
+python apps/cli.py hash --input document.pdf --algorithm sha256
 # Output: abc123def456...
 
 # After receiving, verify hash matches
-python cli.py hash --input document.pdf --algorithm sha256
+python apps/cli.py hash --input document.pdf --algorithm sha256
 # Compare with original hash
 ```
 
@@ -393,7 +393,7 @@ Create a script to encrypt multiple files:
 ```bash
 #!/bin/bash
 for file in *.txt; do
-    python cli.py encrypt --algorithm aes --input "$file" --output "${file}.enc" --password "batchpass"
+    python apps/cli.py encrypt --algorithm aes --input "$file" --output "${file}.enc" --password "batchpass"
 done
 ```
 
@@ -406,7 +406,7 @@ done
 # Generate report of file hashes
 echo "File Integrity Report - $(date)" > report.txt
 for file in important/*; do
-    hash=$(python cli.py hash --input "$file" --algorithm sha256 | tail -1)
+    hash=$(python apps/cli.py hash --input "$file" --algorithm sha256 | tail -1)
     echo "$file: $hash" >> report.txt
 done
 ```
@@ -442,7 +442,7 @@ done
 **Solution:**
 ```bash
 # Add --password flag
-python cli.py encrypt --algorithm aes --input file.txt --output enc.json --password "yourpassword"
+python apps/cli.py encrypt --algorithm aes --input file.txt --output enc.json --password "yourpassword"
 ```
 
 #### 4. "Only WAV files are supported for audio steganography"
@@ -463,10 +463,10 @@ python cli.py encrypt --algorithm aes --input file.txt --output enc.json --passw
 **Solution:**
 ```bash
 # First generate keys
-python cli.py generate-keys --algorithm rsa --output-dir ./keys
+python apps/cli.py generate-keys --algorithm rsa --output-dir ./keys
 
 # Then use them
-python cli.py encrypt --algorithm rsa --input msg.txt --output enc.txt --key ./keys/public_key.pem
+python apps/cli.py encrypt --algorithm rsa --input msg.txt --output enc.txt --key ./keys/public_key.pem
 ```
 
 #### 6. "Module not found" errors
@@ -516,16 +516,16 @@ For maximum security, encrypt data before hiding it:
 
 ```bash
 # Encrypt
-python cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "pass"
+python apps/cli.py encrypt --algorithm aes --input message.txt --output encrypted.json --password "pass"
 
 # Hide encrypted data
-python cli.py stego-encode --type image --cover photo.png --message encrypted.json --output stego.png
+python apps/cli.py stego-encode --type image --cover photo.png --message encrypted.json --output stego.png
 
 # Extract
-python cli.py stego-decode --type image --input stego.png --output encrypted.json
+python apps/cli.py stego-decode --type image --input stego.png --output encrypted.json
 
 # Decrypt
-python cli.py decrypt --algorithm aes --input encrypted.json --output message.txt --password "pass"
+python apps/cli.py decrypt --algorithm aes --input encrypted.json --output message.txt --password "pass"
 ```
 
 ### Scripting Examples
@@ -559,8 +559,8 @@ encrypt_file('document.txt', 'document.enc', 'mypassword')
 
 ## Getting Help
 
-- **General Help:** `python cli.py --help`
-- **Command Help:** `python cli.py [command] --help`
+- **General Help:** `python apps/cli.py --help`
+- **Command Help:** `python apps/cli.py [command] --help`
 - **Documentation:** See `README.md` and `docs/` directory
 - **Issues:** Report at [GitHub Issues](https://github.com/parththakar2003/Secure-CipherStegno-Tool/issues)
 
@@ -572,28 +572,28 @@ encrypt_file('document.txt', 'document.enc', 'mypassword')
 
 ```bash
 # Encrypt with AES
-python cli.py encrypt --algorithm aes --input file.txt --output enc.json --password "pass"
+python apps/cli.py encrypt --algorithm aes --input file.txt --output enc.json --password "pass"
 
 # Decrypt with AES
-python cli.py decrypt --algorithm aes --input enc.json --output file.txt --password "pass"
+python apps/cli.py decrypt --algorithm aes --input enc.json --output file.txt --password "pass"
 
 # Generate RSA keys
-python cli.py generate-keys --algorithm rsa --output-dir ./keys
+python apps/cli.py generate-keys --algorithm rsa --output-dir ./keys
 
 # Hide in image
-python cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png
+python apps/cli.py stego-encode --type image --cover photo.png --message secret.txt --output stego.png
 
 # Extract from image
-python cli.py stego-decode --type image --input stego.png --output secret.txt
+python apps/cli.py stego-decode --type image --input stego.png --output secret.txt
 
 # Hash file
-python cli.py hash --input file.pdf --algorithm sha256
+python apps/cli.py hash --input file.pdf --algorithm sha256
 
 # Generate password
-python cli.py generate-password --length 20
+python apps/cli.py generate-password --length 20
 
 # Validate password
-python cli.py validate-password --password "Test@123"
+python apps/cli.py validate-password --password "Test@123"
 ```
 
 ---

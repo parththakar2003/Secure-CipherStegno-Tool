@@ -302,8 +302,8 @@ This transformation was achieved by:
 
 ### For Users
 1. Install dependencies: `pip install -r requirements.txt`
-2. Run GUI: `python app.py`
-3. Try CLI: `python cli.py --help`
+2. Run GUI: `python apps/app.py`
+3. Try CLI: `python apps/cli.py --help`
 4. Read documentation: `docs/USAGE.md`
 5. Explore examples: `examples/`
 

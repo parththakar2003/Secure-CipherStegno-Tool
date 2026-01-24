@@ -56,8 +56,13 @@ Examples:
     # Parse known args to allow passing through to subcommands
     args, remaining = parser.parse_known_args()
     
-    # Change to script directory
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    # Get the repository root directory (parent of apps/)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.dirname(script_dir)
+    os.chdir(repo_root)
+    
+    # Add apps directory to path for imports
+    sys.path.insert(0, os.path.join(repo_root, 'apps'))
     
     if args.interface == 'gui':
         print("🖥️  Launching GUI interface...")
