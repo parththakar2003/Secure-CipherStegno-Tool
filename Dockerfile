@@ -33,7 +33,7 @@ RUN mkdir -p /app/temp && \
 # Expose port
 EXPOSE $PORT
 
-# Health check - using curl which is available in the base image
+# Health check - using Python's built-in urllib
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT}/api/health', timeout=2)"
 
