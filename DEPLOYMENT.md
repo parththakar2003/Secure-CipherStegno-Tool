@@ -246,7 +246,7 @@ Heroku is a traditional PaaS platform (requires credit card for verification).
 
 Before deploying to production, update these security settings in `src/web/api.py`:
 
-1. **CORS Configuration** (Line 50-56):
+1. **CORS Configuration** (Lines 48-56 in `src/web/api.py`):
    ```python
    # Update allowed origins to your domain
    app.add_middleware(
@@ -258,7 +258,7 @@ Before deploying to production, update these security settings in `src/web/api.p
    )
    ```
 
-2. **OAuth2 Credentials** (Line 315-320):
+2. **OAuth2 Credentials** (See login function around line 336 in `src/web/api.py`):
    - Replace demo credentials with secure authentication
    - Implement proper password hashing
    - Use environment variables for secrets

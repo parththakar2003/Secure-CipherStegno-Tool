@@ -92,7 +92,7 @@ Once deployed, your web interface will be accessible at your platform's URL. You
    ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
    ```
 
-2. **Change Demo Credentials** - See `src/web/api.py` around line 336
+2. **Change Demo Credentials** - See `src/web/api.py` in the login function (line 336)
    - Replace with proper authentication system
    - Don't use demo/demo123 in production!
 
