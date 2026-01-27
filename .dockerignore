@@ -45,8 +45,6 @@ htmlcov/
 
 # Documentation
 docs/_build/
-*.md
-!DEPLOYMENT.md
 
 # Examples and tests
 examples/

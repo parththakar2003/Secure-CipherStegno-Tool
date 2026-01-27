@@ -33,9 +33,9 @@ RUN mkdir -p /app/temp && \
 # Expose port
 EXPOSE $PORT
 
-# Health check
+# Health check - using curl which is available in the base image
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:${PORT}/api/health', timeout=2)"
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT}/api/health', timeout=2)"
 
 # Run the application with gunicorn for production
 CMD uvicorn src.web.api:app --host 0.0.0.0 --port $PORT --workers 2 --log-level info
