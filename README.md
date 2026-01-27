@@ -348,6 +348,14 @@ Then open your browser to `http://localhost:8000`
 - No page reloads needed
 - Privacy-first: all processing happens server-side, no data sent to cloud
 
+**🌐 Deploy to the Web:**
+Want to publish this web interface online? See [DEPLOYMENT.md](DEPLOYMENT.md) for step-by-step guides to deploy on:
+- **Railway** (easiest, free tier available)
+- **Render** (reliable, automatic deploys)
+- **Docker** (self-hosting)
+- **Vercel** (serverless with global CDN)
+- **Heroku** (traditional PaaS)
+
 #### 3. Interactive CLI (🎨 No Code to Type!)
 
 **Best for:** Beginners, visual learners, and anyone who prefers menus over commands
@@ -646,6 +654,64 @@ venv\Scripts\activate.bat
 - ✅ Completed
 - 🔲 Planned
 - 🚧 In Progress
+
+---
+
+## 🌐 Web Deployment
+
+Want to publish the web interface online? The Secure CipherStegno Tool can be deployed to various cloud platforms with ease!
+
+### Quick Deploy Options
+
+Choose your preferred platform for one-click deployment:
+
+| Platform | Free Tier | Setup Time | Best For |
+|----------|-----------|------------|----------|
+| **Railway** | ✅ Yes | 5 minutes | Easiest deployment |
+| **Render** | ✅ Yes | 10 minutes | Reliable hosting |
+| **Docker** | N/A | 15 minutes | Self-hosting |
+| **Vercel** | ✅ Yes | 10 minutes | Global CDN |
+
+### Deployment Files Included
+
+All necessary configuration files are included in the repository:
+
+- 📄 `Dockerfile` - Container deployment for Docker, Railway, Render
+- 📄 `railway.json` - Railway configuration
+- 📄 `render.yaml` - Render.com Blueprint
+- 📄 `vercel.json` - Vercel serverless configuration
+- 📄 `Procfile` - Heroku deployment
+- 📄 `runtime.txt` - Python version specification
+- 📄 `.env.example` - Environment variables template
+
+### Step-by-Step Guides
+
+For detailed deployment instructions for each platform, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
+
+The deployment guide includes:
+- ✅ Platform-specific setup instructions
+- ✅ Environment configuration
+- ✅ Security best practices
+- ✅ Troubleshooting tips
+- ✅ Custom domain setup
+- ✅ SSL/HTTPS configuration
+
+### Quick Start - Railway (Recommended)
+
+The fastest way to deploy:
+
+1. Fork this repository to your GitHub account
+2. Sign up at [railway.app](https://railway.app)
+3. Click "New Project" → "Deploy from GitHub repo"
+4. Select your forked repository
+5. Railway automatically detects `railway.json` and deploys!
+6. Your app will be live at `https://your-app.railway.app`
+
+**That's it!** ⚡ Total time: ~5 minutes
+
+For other platforms and advanced configuration, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+---
 
 ## 🤝 Contributing
 

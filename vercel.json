@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "name": "secure-cipherstegno-tool",
+  "builds": [
+    {
+      "src": "src/web/api.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "src/web/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "src/web/api.py"
+    }
+  ],
+  "env": {
+    "PYTHON_VERSION": "3.11"
+  },
+  "regions": ["iad1"]
+}
