@@ -1,0 +1,19 @@
+# Render Blueprint for Secure CipherStegno Tool
+# Deploy with: render blueprint sync or via Render Dashboard
+
+services:
+  - type: web
+    name: secure-cipherstegno-tool
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.web.api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PORT
+        value: 8000
+    healthCheckPath: /api/health
+    autoDeploy: true
