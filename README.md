@@ -43,6 +43,12 @@
 ![Security](https://img.shields.io/badge/Focus-Cybersecurity-critical?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Active%20Development-success?style=for-the-badge)
 
+[![Deploy on Railway](https://img.shields.io/badge/Deploy%20on-Railway-6C4FBB?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app/new/template)
+[![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/deploy)
+[![Docker](https://img.shields.io/badge/Deploy%20with-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/)
+
+> 🌐 **Want to publish the web version?** See [QUICK_DEPLOY.md](QUICK_DEPLOY.md) for 5-minute deployment guide!
+
 
 ---
 
