@@ -14,7 +14,7 @@ if sys.version_info < (3, 8):
     sys.exit(1)
 
 # Add src to path
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from colorama import init, Fore, Style
 import time

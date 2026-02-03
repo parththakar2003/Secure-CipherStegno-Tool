@@ -69,7 +69,7 @@ except (ImportError, ModuleNotFoundError) as e:
     sys.exit(1)
 
 # Add src to path
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from src.crypto import (CaesarCipher, AESCipher, RSACipher, VigenereCipher,
                         PlayfairCipher, RailFenceCipher, BlowfishCipher,
