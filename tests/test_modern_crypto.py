@@ -177,14 +177,17 @@ class TestClassicalCiphers(unittest.TestCase):
         """Test Playfair cipher"""
         from src.crypto.classical import PlayfairCipher
         
-        plaintext = "HELLO WORLD"
+        # Use text without consecutive doubled letters to avoid Playfair X-insertion
+        # (Playfair inserts 'X' between identical adjacent letters, so "LL" -> "LX",
+        # meaning the round-trip of "HELLO" would yield "HELXLO", not "HELLO")
+        plaintext = "CRYPTO WORLD"
         key = "KEYWORD"
         
         encrypted = PlayfairCipher.encrypt(plaintext, key)
         decrypted = PlayfairCipher.decrypt(encrypted, key)
         
-        # Playfair may add padding, so check if original is in result
-        self.assertIn("HELLO", decrypted.upper())
+        # Playfair may add padding (X at end for odd-length), so check if original is in result
+        self.assertIn("CRYPTO", decrypted.upper())
     
     def test_railfence_encrypt_decrypt(self):
         """Test Rail Fence cipher"""
