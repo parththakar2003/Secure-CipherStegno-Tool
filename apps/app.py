@@ -655,6 +655,13 @@ class SecureCipherStegnoApp:
                                   f"Key (base64): {key_b64[:50]}...\n\n"
                                   f"⚠️ Keep key secure!")
             
+            else:
+                messagebox.showinfo("Info",
+                                  f"{algo.upper()} uses password-based encryption.\n\n"
+                                  f"No separate key file is needed.\n"
+                                  f"Simply provide a password when encrypting/decrypting.")
+                return
+            
             self.logger.success(f"{algo.upper()} keys generated successfully")
         
         except Exception as e:
@@ -1100,7 +1107,7 @@ class SecureCipherStegnoApp:
     
     def _handle_show_docs(self):
         """Show documentation"""
-        docs_path = os.path.join(os.path.dirname(__file__), 'docs', 'USAGE.md')
+        docs_path = os.path.join(os.path.dirname(__file__), '..', 'docs', 'USAGE.md')
         
         if os.path.exists(docs_path):
             window = tk.Toplevel(self.root)
@@ -1170,4 +1177,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\n👋 Goodbye!")
+        sys.exit(0)
+    except Exception as e:
+        print(f"\n❌ Error: {e}", file=sys.stderr)
+        sys.exit(1)
