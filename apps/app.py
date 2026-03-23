@@ -1,0 +1,1187 @@
+"""
+Enhanced GUI Application for Secure CipherStegno Tool
+Integrates all advanced features with improved UI
+"""
+
+import sys
+import os
+
+# Check Python version before any other imports
+if sys.version_info < (3, 8):
+    sys.stderr.write(
+        "=" * 70 + "\n"
+        "ERROR: Python 3.8 or higher is required\n"
+        "=" * 70 + "\n"
+        "Current Python version: {0}.{1}.{2}\n".format(
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro
+        ) +
+        "Required Python version: 3.8 or higher\n\n"
+        "This tool requires Python 3.8+ because:\n"
+        "  • Pillow >= 10.0.0 requires Python 3.8+\n"
+        "  • NumPy >= 1.24.0 requires Python 3.8+\n"
+        "  • FastAPI >= 0.104.0 requires Python 3.8+\n"
+        "  • Other dependencies require modern Python versions\n\n"
+        "To fix this issue:\n"
+        "  1. Install Python 3.8+ from https://www.python.org/downloads/\n"
+        "  2. Use 'python3' instead of 'python' command\n"
+        "  3. Run: python3 app.py\n\n"
+        "For detailed instructions, see:\n"
+        "  https://github.com/parththakar2003/Secure-CipherStegno-Tool#installation--usage\n"
+        "=" * 70 + "\n"
+    )
+    sys.exit(1)
+
+# Check if tkinter is available (will fail in headless environments)
+try:
+    import tkinter as tk
+    from tkinter import ttk, messagebox, filedialog, scrolledtext
+except (ImportError, ModuleNotFoundError) as e:
+    print("=" * 70)
+    print("ERROR: Tkinter is not available")
+    print("=" * 70)
+    print()
+    print(f"Import error: {e}")
+    print()
+    print("The GUI application requires Tkinter, which is not available")
+    print("in this environment (headless or missing system package).")
+    print()
+    print("Available alternatives:")
+    print()
+    print("  1. Use the Command Line Interface (CLI):")
+    print("     python cli.py --help")
+    print()
+    print("  2. Use the Interactive CLI:")
+    print("     python interactive_cli.py")
+    print()
+    print("  3. Use the Web Interface:")
+    print("     python src/web/api.py")
+    print("     # or")
+    print("     python launch.py web")
+    print()
+    print("  4. Install Tkinter (if running on Linux):")
+    print("     Ubuntu/Debian: sudo apt-get install python3-tk")
+    print("     Fedora/RHEL:   sudo dnf install python3-tkinter")
+    print("     Arch:          sudo pacman -S tk")
+    print()
+    print("=" * 70)
+    sys.exit(1)
+
+# Add src to path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+from src.crypto import (CaesarCipher, AESCipher, RSACipher, VigenereCipher,
+                        PlayfairCipher, RailFenceCipher, BlowfishCipher,
+                        DES3Cipher, ChaCha20Cipher)
+from src.steganography import ImageSteganography, AudioSteganography, VideoSteganography
+from src.utils import PasswordValidator, calculate_file_hash, Logger
+
+
+class ModernButton(tk.Button):
+    """Styled modern button"""
+    
+    def __init__(self, parent, **kwargs):
+        defaults = {
+            'font': ('Arial', 12),
+            'height': 2,
+            'width': 20,
+            'bg': '#2196F3',
+            'fg': 'white',
+            'activebackground': '#1976D2',
+            'cursor': 'hand2',
+            'relief': tk.FLAT
+        }
+        defaults.update(kwargs)
+        super().__init__(parent, **defaults)
+
+
+class SecureCipherStegnoApp:
+    """Main application class"""
+    
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Secure CipherStegno Tool - Professional Edition")
+        self.root.geometry("800x600")
+        self.root.configure(bg="#f5f5f5")
+        
+        self.logger = Logger()
+        
+        self._create_main_interface()
+    
+    def _create_main_interface(self):
+        """Create main application interface"""
+        # Header
+        header_frame = tk.Frame(self.root, bg="#1976D2", height=80)
+        header_frame.pack(fill=tk.X)
+        header_frame.pack_propagate(False)
+        
+        tk.Label(
+            header_frame,
+            text="🔐 Secure CipherStegno Tool",
+            font=("Arial", 24, "bold"),
+            bg="#1976D2",
+            fg="white"
+        ).pack(pady=20)
+        
+        # Main content
+        main_frame = tk.Frame(self.root, bg="#f5f5f5")
+        main_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+        
+        # Create notebook for tabs
+        self.notebook = ttk.Notebook(main_frame)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+        
+        # Add tabs
+        self._create_cryptography_tab()
+        self._create_steganography_tab()
+        self._create_tools_tab()
+        
+        # Footer
+        footer_frame = tk.Frame(self.root, bg="#f5f5f5")
+        footer_frame.pack(fill=tk.X, padx=20, pady=10)
+        
+        tk.Label(
+            footer_frame,
+            text="© 2025 PARTH THAKAR | Professional Security Tool",
+            font=("Arial", 10),
+            bg="#f5f5f5",
+            fg="#666"
+        ).pack()
+    
+    def _create_cryptography_tab(self):
+        """Create cryptography tab"""
+        tab = tk.Frame(self.notebook, bg="white")
+        self.notebook.add(tab, text="🔐 Cryptography")
+        
+        # Algorithm selection
+        algo_frame = tk.LabelFrame(tab, text="Select Algorithm", font=("Arial", 12, "bold"),
+                                   bg="white", padx=20, pady=20)
+        algo_frame.pack(fill=tk.X, padx=20, pady=10)
+        
+        self.crypto_algo = tk.StringVar(value="aes")
+        
+        # Classical Ciphers
+        tk.Label(algo_frame, text="Classical Ciphers:", font=("Arial", 10, "bold"), 
+                bg="white", fg="#666").pack(anchor=tk.W, pady=(0, 5))
+        tk.Radiobutton(algo_frame, text="Caesar Cipher (Simple)", variable=self.crypto_algo,
+                      value="caesar", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="Vigenère Cipher (Keyword)", variable=self.crypto_algo,
+                      value="vigenere", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="Playfair Cipher (Digraph)", variable=self.crypto_algo,
+                      value="playfair", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="Rail Fence Cipher (Transposition)", variable=self.crypto_algo,
+                      value="railfence", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        
+        # Modern Symmetric Encryption
+        tk.Label(algo_frame, text="Modern Symmetric Encryption:", font=("Arial", 10, "bold"),
+                bg="white", fg="#666").pack(anchor=tk.W, pady=(10, 5))
+        tk.Radiobutton(algo_frame, text="AES-256 (Recommended)", variable=self.crypto_algo,
+                      value="aes", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="Blowfish (Fast)", variable=self.crypto_algo,
+                      value="blowfish", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="3DES (Legacy)", variable=self.crypto_algo,
+                      value="3des", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(algo_frame, text="ChaCha20 (Modern)", variable=self.crypto_algo,
+                      value="chacha20", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        
+        # Asymmetric Encryption
+        tk.Label(algo_frame, text="Asymmetric Encryption:", font=("Arial", 10, "bold"),
+                bg="white", fg="#666").pack(anchor=tk.W, pady=(10, 5))
+        tk.Radiobutton(algo_frame, text="RSA (Public Key)", variable=self.crypto_algo,
+                      value="rsa", font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        
+        # Action buttons
+        button_frame = tk.Frame(tab, bg="white")
+        button_frame.pack(pady=20)
+        
+        ModernButton(button_frame, text="🔒 Encrypt", bg="#4CAF50",
+                    command=self._handle_encryption).pack(side=tk.LEFT, padx=10)
+        ModernButton(button_frame, text="🔓 Decrypt", bg="#FF9800",
+                    command=self._handle_decryption).pack(side=tk.LEFT, padx=10)
+        ModernButton(button_frame, text="🔑 Generate Keys", bg="#9C27B0",
+                    command=self._handle_key_generation).pack(side=tk.LEFT, padx=10)
+    
+    def _create_steganography_tab(self):
+        """Create steganography tab"""
+        tab = tk.Frame(self.notebook, bg="white")
+        self.notebook.add(tab, text="🖼️ Steganography")
+        
+        # Type selection
+        type_frame = tk.LabelFrame(tab, text="Select Type", font=("Arial", 12, "bold"),
+                                   bg="white", padx=20, pady=20)
+        type_frame.pack(fill=tk.X, padx=20, pady=10)
+        
+        self.stego_type = tk.StringVar(value="image")
+        
+        tk.Radiobutton(type_frame, text="📷 Image Steganography (PNG, BMP)",
+                      variable=self.stego_type, value="image",
+                      font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(type_frame, text="🎵 Audio Steganography (WAV)",
+                      variable=self.stego_type, value="audio",
+                      font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        tk.Radiobutton(type_frame, text="🎬 Video Steganography (MP4, AVI)",
+                      variable=self.stego_type, value="video",
+                      font=("Arial", 11), bg="white").pack(anchor=tk.W)
+        
+        # Options
+        options_frame = tk.Frame(tab, bg="white")
+        options_frame.pack(pady=10)
+        
+        self.compress_var = tk.BooleanVar(value=True)
+        tk.Checkbutton(options_frame, text="Compress message before hiding",
+                      variable=self.compress_var, font=("Arial", 10),
+                      bg="white").pack()
+        
+        # Action buttons
+        button_frame = tk.Frame(tab, bg="white")
+        button_frame.pack(pady=20)
+        
+        ModernButton(button_frame, text="📥 Hide Message", bg="#2196F3",
+                    command=self._handle_stego_encode).pack(side=tk.LEFT, padx=10)
+        ModernButton(button_frame, text="📤 Extract Message", bg="#009688",
+                    command=self._handle_stego_decode).pack(side=tk.LEFT, padx=10)
+        ModernButton(button_frame, text="ℹ️ Check Capacity", bg="#607D8B",
+                    command=self._handle_check_capacity).pack(side=tk.LEFT, padx=10)
+    
+    def _create_tools_tab(self):
+        """Create tools tab"""
+        tab = tk.Frame(self.notebook, bg="white")
+        self.notebook.add(tab, text="🛠️ Security Tools")
+        
+        # Tools grid
+        tools_frame = tk.Frame(tab, bg="white")
+        tools_frame.pack(expand=True)
+        
+        # Row 1
+        ModernButton(tools_frame, text="🔐 Password Generator", bg="#4CAF50",
+                    command=self._handle_password_generator).grid(row=0, column=0, padx=10, pady=10)
+        ModernButton(tools_frame, text="✅ Password Validator", bg="#2196F3",
+                    command=self._handle_password_validator).grid(row=0, column=1, padx=10, pady=10)
+        
+        # Row 2
+        ModernButton(tools_frame, text="#️⃣ File Hash Calculator", bg="#FF9800",
+                    command=self._handle_file_hash).grid(row=1, column=0, padx=10, pady=10)
+        ModernButton(tools_frame, text="🔍 Verify File Integrity", bg="#9C27B0",
+                    command=self._handle_verify_integrity).grid(row=1, column=1, padx=10, pady=10)
+        
+        # Row 3
+        ModernButton(tools_frame, text="📖 View Documentation", bg="#607D8B",
+                    command=self._handle_show_docs).grid(row=2, column=0, padx=10, pady=10)
+        ModernButton(tools_frame, text="ℹ️ About", bg="#009688",
+                    command=self._handle_about).grid(row=2, column=1, padx=10, pady=10)
+    
+    def _handle_encryption(self):
+        """Handle encryption"""
+        algo = self.crypto_algo.get()
+        
+        # Create encryption window
+        window = tk.Toplevel(self.root)
+        window.title(f"Encrypt with {algo.upper()}")
+        window.geometry("600x550")
+        window.configure(bg="white")
+        
+        # Input text
+        tk.Label(window, text="Enter text to encrypt:", font=("Arial", 12, "bold"),
+                bg="white").pack(pady=10)
+        input_text = scrolledtext.ScrolledText(window, height=8, font=("Arial", 11))
+        input_text.pack(padx=20, pady=5, fill=tk.BOTH, expand=True)
+        
+        # Password/Key input - conditional based on algorithm
+        password_entry = None
+        if algo in ['aes', 'blowfish', '3des', 'chacha20', 'vigenere', 'playfair']:
+            label_text = "Key:" if algo in ['vigenere', 'playfair'] else "Password:"
+            tk.Label(window, text=label_text, font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            # Mask all keys/passwords for security
+            password_entry = tk.Entry(window, font=("Arial", 11), show="*", width=40)
+            password_entry.pack(pady=5)
+        elif algo in ['caesar', 'railfence']:
+            label_text = "Shift Value:" if algo == 'caesar' else "Number of Rails:"
+            tk.Label(window, text=label_text, font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            password_entry = tk.Entry(window, font=("Arial", 11), width=20)
+            # No default value - require explicit user input for security
+            password_entry.pack(pady=5)
+        
+        # Output text
+        tk.Label(window, text="Encrypted output:", font=("Arial", 12, "bold"),
+                bg="white").pack(pady=10)
+        output_text = scrolledtext.ScrolledText(window, height=8, font=("Arial", 11))
+        output_text.pack(padx=20, pady=5, fill=tk.BOTH, expand=True)
+        
+        def encrypt():
+            text = input_text.get("1.0", tk.END).strip()
+            if not text:
+                messagebox.showwarning("Input Error", "Please enter text to encrypt")
+                return
+            
+            try:
+                # Classical Ciphers
+                if algo == 'caesar':
+                    shift = int(password_entry.get() or 3)
+                    result = CaesarCipher.encrypt(text, shift)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", f"Text encrypted with Caesar cipher (shift={shift})")
+                
+                elif algo == 'vigenere':
+                    key = password_entry.get()
+                    if not key:
+                        messagebox.showwarning("Input Error", "Please enter encryption key")
+                        return
+                    result = VigenereCipher.encrypt(text, key)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text encrypted with Vigenère cipher!")
+                
+                elif algo == 'playfair':
+                    key = password_entry.get()
+                    if not key:
+                        messagebox.showwarning("Input Error", "Please enter encryption key")
+                        return
+                    result = PlayfairCipher.encrypt(text, key)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text encrypted with Playfair cipher!")
+                
+                elif algo == 'railfence':
+                    rails = int(password_entry.get() or 3)
+                    result = RailFenceCipher.encrypt(text, rails)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", f"Text encrypted with Rail Fence cipher (rails={rails})")
+                
+                # Modern Symmetric Encryption
+                elif algo == 'aes':
+                    password = password_entry.get()
+                    if not password:
+                        messagebox.showwarning("Input Error", "Please enter password")
+                        return
+                    
+                    result = AESCipher.encrypt_with_password(text, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
+                    output_text.insert(tk.END, f"IV: {result['iv']}")
+                    
+                    messagebox.showinfo("Success", "Text encrypted with AES-256! Save both ciphertext and IV.")
+                
+                elif algo == 'blowfish':
+                    password = password_entry.get()
+                    if not password:
+                        messagebox.showwarning("Input Error", "Please enter password")
+                        return
+                    
+                    result = BlowfishCipher.encrypt_with_password(text, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
+                    output_text.insert(tk.END, f"IV: {result['iv']}")
+                    
+                    messagebox.showinfo("Success", "Text encrypted with Blowfish! Save both ciphertext and IV.")
+                
+                elif algo == '3des':
+                    password = password_entry.get()
+                    if not password:
+                        messagebox.showwarning("Input Error", "Please enter password")
+                        return
+                    
+                    result = DES3Cipher.encrypt_with_password(text, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
+                    output_text.insert(tk.END, f"IV: {result['iv']}")
+                    
+                    messagebox.showwarning("Security Warning", "Text encrypted with 3DES.\n\n⚠️ WARNING: 3DES is LEGACY and has known vulnerabilities.\n\nPlease consider using AES-256 instead for better security!")
+                
+                elif algo == 'chacha20':
+                    password = password_entry.get()
+                    if not password:
+                        messagebox.showwarning("Input Error", "Please enter password")
+                        return
+                    
+                    result = ChaCha20Cipher.encrypt_with_password(text, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", f"Ciphertext: {result['ciphertext']}\n\n")
+                    output_text.insert(tk.END, f"Nonce: {result['nonce']}")
+                    
+                    messagebox.showinfo("Success", "Text encrypted with ChaCha20! Save both ciphertext and nonce.")
+                
+                # Asymmetric Encryption
+                elif algo == 'rsa':
+                    key_file = filedialog.askopenfilename(title="Select Public Key",
+                                                         filetypes=[("PEM files", "*.pem")])
+                    if not key_file:
+                        return
+                    
+                    with open(key_file, 'r') as f:
+                        public_key = f.read()
+                    
+                    cipher = RSACipher()
+                    cipher.load_public_key(public_key)
+                    result = cipher.encrypt(text)
+                    
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text encrypted with RSA!")
+                
+                self.logger.success(f"Text encrypted successfully with {algo.upper()}")
+            
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+                self.logger.error(f"Encryption failed: {str(e)}")
+        
+        ModernButton(window, text="🔒 Encrypt", bg="#4CAF50",
+                    command=encrypt).pack(pady=15)
+    
+    def _handle_decryption(self):
+        """Handle decryption"""
+        algo = self.crypto_algo.get()
+        
+        # Create decryption window
+        window = tk.Toplevel(self.root)
+        window.title(f"Decrypt with {algo.upper()}")
+        window.geometry("600x600")
+        window.configure(bg="white")
+        
+        # Input ciphertext
+        tk.Label(window, text="Enter encrypted text:", font=("Arial", 12, "bold"),
+                bg="white").pack(pady=10)
+        input_text = scrolledtext.ScrolledText(window, height=8, font=("Arial", 11))
+        input_text.pack(padx=20, pady=5, fill=tk.BOTH, expand=True)
+        
+        # Additional fields for modern ciphers (IV/Nonce)
+        iv_entry = None
+        if algo in ['aes', 'blowfish', '3des']:
+            tk.Label(window, text="IV (Initialization Vector):", font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            iv_entry = tk.Entry(window, font=("Arial", 11), width=50)
+            iv_entry.pack(pady=5)
+        elif algo == 'chacha20':
+            tk.Label(window, text="Nonce:", font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            iv_entry = tk.Entry(window, font=("Arial", 11), width=50)
+            iv_entry.pack(pady=5)
+        
+        # Password/Key input
+        password_entry = None
+        if algo in ['aes', 'blowfish', '3des', 'chacha20', 'vigenere', 'playfair']:
+            label_text = "Key:" if algo in ['vigenere', 'playfair'] else "Password:"
+            tk.Label(window, text=label_text, font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            # Mask all keys/passwords for security
+            password_entry = tk.Entry(window, font=("Arial", 11), show="*", width=40)
+            password_entry.pack(pady=5)
+        elif algo in ['caesar', 'railfence']:
+            label_text = "Shift Value:" if algo == 'caesar' else "Number of Rails:"
+            tk.Label(window, text=label_text, font=("Arial", 11),
+                    bg="white").pack(pady=5)
+            password_entry = tk.Entry(window, font=("Arial", 11), width=20)
+            # No default value - require explicit user input for security
+            password_entry.pack(pady=5)
+        
+        # Output text
+        tk.Label(window, text="Decrypted output:", font=("Arial", 12, "bold"),
+                bg="white").pack(pady=10)
+        output_text = scrolledtext.ScrolledText(window, height=8, font=("Arial", 11))
+        output_text.pack(padx=20, pady=5, fill=tk.BOTH, expand=True)
+        
+        def decrypt():
+            text = input_text.get("1.0", tk.END).strip()
+            if not text:
+                messagebox.showwarning("Input Error", "Please enter encrypted text")
+                return
+            
+            try:
+                # Classical Ciphers
+                if algo == 'caesar':
+                    shift = int(password_entry.get() or 3)
+                    result = CaesarCipher.decrypt(text, shift)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == 'vigenere':
+                    key = password_entry.get()
+                    if not key:
+                        messagebox.showwarning("Input Error", "Please enter decryption key")
+                        return
+                    result = VigenereCipher.decrypt(text, key)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == 'playfair':
+                    key = password_entry.get()
+                    if not key:
+                        messagebox.showwarning("Input Error", "Please enter decryption key")
+                        return
+                    result = PlayfairCipher.decrypt(text, key)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == 'railfence':
+                    rails = int(password_entry.get() or 3)
+                    result = RailFenceCipher.decrypt(text, rails)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                # Modern Symmetric Encryption
+                elif algo == 'aes':
+                    password = password_entry.get()
+                    iv = iv_entry.get().strip()
+                    
+                    if not password or not iv:
+                        messagebox.showwarning("Input Error", "Please enter password and IV")
+                        return
+                    
+                    result = AESCipher.decrypt_with_password(text, iv, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == 'blowfish':
+                    password = password_entry.get()
+                    iv = iv_entry.get().strip()
+                    
+                    if not password or not iv:
+                        messagebox.showwarning("Input Error", "Please enter password and IV")
+                        return
+                    
+                    result = BlowfishCipher.decrypt_with_password(text, iv, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == '3des':
+                    password = password_entry.get()
+                    iv = iv_entry.get().strip()
+                    
+                    if not password or not iv:
+                        messagebox.showwarning("Input Error", "Please enter password and IV")
+                        return
+                    
+                    result = DES3Cipher.decrypt_with_password(text, iv, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                elif algo == 'chacha20':
+                    password = password_entry.get()
+                    nonce = iv_entry.get().strip()
+                    
+                    if not password or not nonce:
+                        messagebox.showwarning("Input Error", "Please enter password and nonce")
+                        return
+                    
+                    result = ChaCha20Cipher.decrypt_with_password(text, nonce, password)
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted successfully!")
+                
+                # Asymmetric Encryption
+                elif algo == 'rsa':
+                    key_file = filedialog.askopenfilename(title="Select Private Key",
+                                                         filetypes=[("PEM files", "*.pem")])
+                    if not key_file:
+                        return
+                    
+                    with open(key_file, 'r') as f:
+                        private_key = f.read()
+                    
+                    cipher = RSACipher()
+                    cipher.load_private_key(private_key)
+                    result = cipher.decrypt(text)
+                    
+                    output_text.delete("1.0", tk.END)
+                    output_text.insert("1.0", result)
+                    messagebox.showinfo("Success", "Text decrypted with RSA!")
+                
+                self.logger.success(f"Text decrypted successfully with {algo.upper()}")
+            
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+                self.logger.error(f"Decryption failed: {str(e)}")
+        
+        ModernButton(window, text="🔓 Decrypt", bg="#FF9800",
+                    command=decrypt).pack(pady=15)
+    
+    def _handle_key_generation(self):
+        """Handle key generation"""
+        algo = self.crypto_algo.get()
+        
+        if algo == 'caesar':
+            messagebox.showinfo("Info", "Caesar cipher doesn't require key generation. Just use a shift value (1-25).")
+            return
+        
+        output_dir = filedialog.askdirectory(title="Select directory to save keys")
+        if not output_dir:
+            return
+        
+        try:
+            if algo == 'rsa':
+                cipher = RSACipher(key_size=2048)
+                keys = cipher.generate_key_pair()
+                
+                public_key_path = os.path.join(output_dir, 'public_key.pem')
+                private_key_path = os.path.join(output_dir, 'private_key.pem')
+                
+                with open(public_key_path, 'w') as f:
+                    f.write(keys['public_key'])
+                with open(private_key_path, 'w') as f:
+                    f.write(keys['private_key'])
+                
+                messagebox.showinfo("Success",
+                                  f"RSA key pair generated!\n\n"
+                                  f"Public key: {public_key_path}\n"
+                                  f"Private key: {private_key_path}\n\n"
+                                  f"⚠️ Keep private key secure!")
+            
+            elif algo == 'aes':
+                from src.utils import generate_random_key
+                import base64
+                
+                key = generate_random_key(32)
+                key_path = os.path.join(output_dir, 'aes_key.bin')
+                
+                with open(key_path, 'wb') as f:
+                    f.write(key)
+                
+                key_b64 = base64.b64encode(key).decode()
+                
+                messagebox.showinfo("Success",
+                                  f"AES-256 key generated!\n\n"
+                                  f"Key file: {key_path}\n"
+                                  f"Key (base64): {key_b64[:50]}...\n\n"
+                                  f"⚠️ Keep key secure!")
+            
+            else:
+                messagebox.showinfo("Info",
+                                  f"{algo.upper()} uses password-based encryption.\n\n"
+                                  f"No separate key file is needed.\n"
+                                  f"Simply provide a password when encrypting/decrypting.")
+                return
+            
+            self.logger.success(f"{algo.upper()} keys generated successfully")
+        
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+            self.logger.error(f"Key generation failed: {str(e)}")
+    
+    def _handle_stego_encode(self):
+        """Handle steganography encoding"""
+        stego_type = self.stego_type.get()
+        
+        # Select cover file
+        if stego_type == 'image':
+            cover_file = filedialog.askopenfilename(
+                title="Select Cover Image",
+                filetypes=[("Image files", "*.png *.bmp")]
+            )
+        elif stego_type == 'audio':
+            cover_file = filedialog.askopenfilename(
+                title="Select Cover Audio",
+                filetypes=[("WAV files", "*.wav")]
+            )
+        else:  # video
+            cover_file = filedialog.askopenfilename(
+                title="Select Cover Video",
+                filetypes=[("Video files", "*.mp4 *.avi")]
+            )
+        
+        if not cover_file:
+            return
+        
+        # Get message
+        window = tk.Toplevel(self.root)
+        window.title("Enter Message to Hide")
+        window.geometry("500x400")
+        window.configure(bg="white")
+        
+        tk.Label(window, text="Enter message to hide:", font=("Arial", 12, "bold"),
+                bg="white").pack(pady=10)
+        message_text = scrolledtext.ScrolledText(window, height=15, font=("Arial", 11))
+        message_text.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
+        
+        def encode():
+            message = message_text.get("1.0", tk.END).strip()
+            if not message:
+                messagebox.showwarning("Input Error", "Please enter a message")
+                return
+            
+            # Select output file
+            if stego_type == 'image':
+                output_file = filedialog.asksaveasfilename(
+                    defaultextension=".png",
+                    filetypes=[("PNG files", "*.png"), ("BMP files", "*.bmp")]
+                )
+            elif stego_type == 'audio':
+                output_file = filedialog.asksaveasfilename(
+                    defaultextension=".wav",
+                    filetypes=[("WAV files", "*.wav")]
+                )
+            else:  # video
+                output_file = filedialog.asksaveasfilename(
+                    defaultextension=".mp4",
+                    filetypes=[("MP4 files", "*.mp4"), ("AVI files", "*.avi")]
+                )
+            
+            if not output_file:
+                return
+            
+            try:
+                if stego_type == 'image':
+                    result = ImageSteganography.encode(
+                        cover_file, message, output_file,
+                        compress=self.compress_var.get()
+                    )
+                    messagebox.showinfo("Success",
+                                      f"Message hidden successfully!\n\n"
+                                      f"Output: {output_file}\n"
+                                      f"Message size: {result['message_size']} bytes\n"
+                                      f"Compressed: {result['compressed']}")
+                elif stego_type == 'audio':
+                    result = AudioSteganography.encode(
+                        cover_file, message, output_file
+                    )
+                    messagebox.showinfo("Success",
+                                      f"Message hidden successfully!\n\n"
+                                      f"Output: {output_file}\n"
+                                      f"Duration: {result['audio_duration']:.2f}s")
+                else:  # video
+                    result = VideoSteganography.encode(
+                        cover_file, message, output_file
+                    )
+                    messagebox.showinfo("Success",
+                                      f"Message hidden successfully!\n\n"
+                                      f"Output: {output_file}\n"
+                                      f"Frames: {result.get('frames_used', 'N/A')}")
+                
+                window.destroy()
+                self.logger.success("Message hidden successfully")
+            
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+                self.logger.error(f"Steganography encoding failed: {str(e)}")
+        
+        ModernButton(window, text="📥 Hide Message", bg="#4CAF50",
+                    command=encode).pack(pady=15)
+    
+    def _handle_stego_decode(self):
+        """Handle steganography decoding"""
+        stego_type = self.stego_type.get()
+        
+        # Select stego file
+        if stego_type == 'image':
+            stego_file = filedialog.askopenfilename(
+                title="Select Stego Image",
+                filetypes=[("Image files", "*.png *.bmp")]
+            )
+        elif stego_type == 'audio':
+            stego_file = filedialog.askopenfilename(
+                title="Select Stego Audio",
+                filetypes=[("WAV files", "*.wav")]
+            )
+        else:  # video
+            stego_file = filedialog.askopenfilename(
+                title="Select Stego Video",
+                filetypes=[("Video files", "*.mp4 *.avi")]
+            )
+        
+        if not stego_file:
+            return
+        
+        try:
+            if stego_type == 'image':
+                message = ImageSteganography.decode(
+                    stego_file,
+                    compressed=self.compress_var.get()
+                )
+            elif stego_type == 'audio':
+                message = AudioSteganography.decode(stego_file)
+            else:  # video
+                message = VideoSteganography.decode(stego_file)
+            
+            # Show message
+            window = tk.Toplevel(self.root)
+            window.title("Extracted Message")
+            window.geometry("600x400")
+            window.configure(bg="white")
+            
+            tk.Label(window, text="Extracted Message:", font=("Arial", 14, "bold"),
+                    bg="white").pack(pady=10)
+            
+            message_text = scrolledtext.ScrolledText(window, height=15, font=("Arial", 11))
+            message_text.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
+            message_text.insert("1.0", message)
+            message_text.config(state=tk.DISABLED)
+            
+            def save_message():
+                output_file = filedialog.asksaveasfilename(
+                    defaultextension=".txt",
+                    filetypes=[("Text files", "*.txt")]
+                )
+                if output_file:
+                    with open(output_file, 'w') as f:
+                        f.write(message)
+                    messagebox.showinfo("Success", f"Message saved to {output_file}")
+            
+            ModernButton(window, text="💾 Save Message", bg="#2196F3",
+                        command=save_message).pack(pady=10)
+            
+            self.logger.success("Message extracted successfully")
+        
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+            self.logger.error(f"Steganography decoding failed: {str(e)}")
+    
+    def _handle_check_capacity(self):
+        """Check file capacity for steganography"""
+        stego_type = self.stego_type.get()
+        
+        if stego_type == 'image':
+            file_path = filedialog.askopenfilename(
+                title="Select Image",
+                filetypes=[("Image files", "*.png *.bmp *.jpg *.jpeg")]
+            )
+        elif stego_type == 'audio':
+            file_path = filedialog.askopenfilename(
+                title="Select Audio",
+                filetypes=[("WAV files", "*.wav")]
+            )
+        else:  # video
+            file_path = filedialog.askopenfilename(
+                title="Select Video",
+                filetypes=[("Video files", "*.mp4 *.avi")]
+            )
+        
+        if not file_path:
+            return
+        
+        try:
+            if stego_type == 'image':
+                capacity = ImageSteganography.get_capacity(file_path)
+                messagebox.showinfo("Image Capacity",
+                                  f"Image Size: {capacity['image_size']}\n"
+                                  f"Total Pixels: {capacity['total_pixels']:,}\n"
+                                  f"Max Bytes: {capacity['max_bytes']:,}\n"
+                                  f"Max Characters: ~{capacity['max_chars_approx']:,}")
+            elif stego_type == 'audio':
+                capacity = AudioSteganography.get_capacity(file_path)
+                messagebox.showinfo("Audio Capacity",
+                                  f"Channels: {capacity['channels']}\n"
+                                  f"Sample Rate: {capacity['frame_rate']} Hz\n"
+                                  f"Duration: {capacity['duration_seconds']:.2f}s\n"
+                                  f"Max Bytes: {capacity['max_bytes']:,}\n"
+                                  f"Max Characters: ~{capacity['max_chars_approx']:,}")
+            else:  # video
+                capacity = VideoSteganography.get_capacity(file_path)
+                messagebox.showinfo("Video Capacity",
+                                  f"Video Resolution: {capacity.get('resolution', 'N/A')}\n"
+                                  f"Total Frames: {capacity.get('total_frames', 'N/A'):,}\n"
+                                  f"Max Bytes: {capacity.get('max_bytes', 'N/A'):,}\n"
+                                  f"Max Characters: ~{capacity.get('max_chars_approx', 'N/A'):,}")
+        
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+    
+    def _handle_password_generator(self):
+        """Generate strong password"""
+        window = tk.Toplevel(self.root)
+        window.title("Password Generator")
+        window.geometry("500x350")
+        window.configure(bg="white")
+        
+        tk.Label(window, text="Generate Strong Password", font=("Arial", 16, "bold"),
+                bg="white").pack(pady=20)
+        
+        tk.Label(window, text="Password Length:", font=("Arial", 11),
+                bg="white").pack(pady=5)
+        length_var = tk.IntVar(value=16)
+        length_scale = tk.Scale(window, from_=8, to=32, orient=tk.HORIZONTAL,
+                               variable=length_var, length=300)
+        length_scale.pack(pady=5)
+        
+        result_frame = tk.Frame(window, bg="white")
+        result_frame.pack(pady=20, fill=tk.X, padx=20)
+        
+        password_entry = tk.Entry(result_frame, font=("Courier", 14), width=30,
+                                 justify=tk.CENTER)
+        password_entry.pack(pady=10)
+        
+        def generate():
+            password = PasswordValidator.generate_strong_password(length_var.get())
+            password_entry.delete(0, tk.END)
+            password_entry.insert(0, password)
+            
+            # Validate
+            result = PasswordValidator.validate_strength(password)
+            messagebox.showinfo("Password Generated",
+                              f"Strength: {result['strength']}\n"
+                              f"Score: {result['score']}/8\n\n"
+                              f"✅ Password copied to entry field")
+        
+        def copy_password():
+            window.clipboard_clear()
+            window.clipboard_append(password_entry.get())
+            messagebox.showinfo("Copied", "Password copied to clipboard!")
+        
+        button_frame = tk.Frame(window, bg="white")
+        button_frame.pack(pady=10)
+        
+        ModernButton(button_frame, text="🔄 Generate", bg="#4CAF50",
+                    command=generate).pack(side=tk.LEFT, padx=5)
+        ModernButton(button_frame, text="📋 Copy", bg="#2196F3",
+                    command=copy_password).pack(side=tk.LEFT, padx=5)
+    
+    def _handle_password_validator(self):
+        """Validate password strength"""
+        window = tk.Toplevel(self.root)
+        window.title("Password Validator")
+        window.geometry("500x450")
+        window.configure(bg="white")
+        
+        tk.Label(window, text="Password Strength Validator", font=("Arial", 16, "bold"),
+                bg="white").pack(pady=20)
+        
+        tk.Label(window, text="Enter password to validate:", font=("Arial", 11),
+                bg="white").pack(pady=5)
+        password_entry = tk.Entry(window, font=("Arial", 12), width=30, show="*")
+        password_entry.pack(pady=10)
+        
+        show_var = tk.BooleanVar()
+        tk.Checkbutton(window, text="Show password", variable=show_var,
+                      bg="white", command=lambda: password_entry.config(
+                          show="" if show_var.get() else "*")).pack()
+        
+        result_text = scrolledtext.ScrolledText(window, height=12, font=("Arial", 11),
+                                               state=tk.DISABLED)
+        result_text.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
+        
+        def validate():
+            password = password_entry.get()
+            if not password:
+                messagebox.showwarning("Input Error", "Please enter a password")
+                return
+            
+            result = PasswordValidator.validate_strength(password)
+            
+            result_text.config(state=tk.NORMAL)
+            result_text.delete("1.0", tk.END)
+            
+            result_text.insert("1.0", f"Password Strength: {result['strength']}\n")
+            result_text.insert(tk.END, f"Score: {result['score']}/8\n")
+            result_text.insert(tk.END, f"Valid: {'Yes' if result['valid'] else 'No'}\n\n")
+            
+            if result['feedback']:
+                result_text.insert(tk.END, "Recommendations:\n")
+                for feedback in result['feedback']:
+                    result_text.insert(tk.END, f"  • {feedback}\n")
+            else:
+                result_text.insert(tk.END, "✅ Excellent password!")
+            
+            result_text.config(state=tk.DISABLED)
+        
+        ModernButton(window, text="✅ Validate", bg="#4CAF50",
+                    command=validate).pack(pady=10)
+    
+    def _handle_file_hash(self):
+        """Calculate file hash"""
+        file_path = filedialog.askopenfilename(title="Select File to Hash")
+        if not file_path:
+            return
+        
+        window = tk.Toplevel(self.root)
+        window.title("File Hash Calculator")
+        window.geometry("600x400")
+        window.configure(bg="white")
+        
+        tk.Label(window, text="File Hash Calculator", font=("Arial", 16, "bold"),
+                bg="white").pack(pady=20)
+        
+        tk.Label(window, text=f"File: {os.path.basename(file_path)}",
+                font=("Arial", 11), bg="white").pack(pady=5)
+        
+        hash_algo = tk.StringVar(value="sha256")
+        
+        algo_frame = tk.Frame(window, bg="white")
+        algo_frame.pack(pady=10)
+        
+        tk.Radiobutton(algo_frame, text="MD5", variable=hash_algo, value="md5",
+                      bg="white").pack(side=tk.LEFT, padx=10)
+        tk.Radiobutton(algo_frame, text="SHA-1", variable=hash_algo, value="sha1",
+                      bg="white").pack(side=tk.LEFT, padx=10)
+        tk.Radiobutton(algo_frame, text="SHA-256", variable=hash_algo, value="sha256",
+                      bg="white").pack(side=tk.LEFT, padx=10)
+        tk.Radiobutton(algo_frame, text="SHA-512", variable=hash_algo, value="sha512",
+                      bg="white").pack(side=tk.LEFT, padx=10)
+        
+        result_text = scrolledtext.ScrolledText(window, height=10, font=("Courier", 10))
+        result_text.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
+        
+        def calculate():
+            try:
+                hash_value = calculate_file_hash(file_path, hash_algo.get())
+                result_text.delete("1.0", tk.END)
+                result_text.insert("1.0", f"Algorithm: {hash_algo.get().upper()}\n\n")
+                result_text.insert(tk.END, f"Hash:\n{hash_value}")
+                
+                self.logger.success(f"Hash calculated: {hash_algo.get().upper()}")
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+        
+        def copy_hash():
+            hash_text = result_text.get("3.0", tk.END).strip()
+            if hash_text:
+                window.clipboard_clear()
+                window.clipboard_append(hash_text)
+                messagebox.showinfo("Copied", "Hash copied to clipboard!")
+        
+        button_frame = tk.Frame(window, bg="white")
+        button_frame.pack(pady=10)
+        
+        ModernButton(button_frame, text="Calculate", bg="#4CAF50",
+                    command=calculate).pack(side=tk.LEFT, padx=5)
+        ModernButton(button_frame, text="Copy", bg="#2196F3",
+                    command=copy_hash).pack(side=tk.LEFT, padx=5)
+    
+    def _handle_verify_integrity(self):
+        """Verify file integrity"""
+        messagebox.showinfo("Verify File Integrity",
+                          "Select a file and provide its expected hash to verify integrity.")
+        
+        file_path = filedialog.askopenfilename(title="Select File to Verify")
+        if not file_path:
+            return
+        
+        # Get expected hash
+        window = tk.Toplevel(self.root)
+        window.title("Verify File Integrity")
+        window.geometry("500x300")
+        window.configure(bg="white")
+        
+        tk.Label(window, text="Enter expected hash:", font=("Arial", 12, "bold"),
+                bg="white").pack(pady=20)
+        
+        hash_entry = tk.Entry(window, font=("Arial", 11), width=50)
+        hash_entry.pack(pady=10)
+        
+        hash_algo = tk.StringVar(value="sha256")
+        
+        algo_frame = tk.Frame(window, bg="white")
+        algo_frame.pack(pady=10)
+        
+        tk.Label(algo_frame, text="Algorithm:", bg="white").pack(side=tk.LEFT, padx=5)
+        tk.Radiobutton(algo_frame, text="SHA-256", variable=hash_algo,
+                      value="sha256", bg="white").pack(side=tk.LEFT, padx=5)
+        tk.Radiobutton(algo_frame, text="SHA-512", variable=hash_algo,
+                      value="sha512", bg="white").pack(side=tk.LEFT, padx=5)
+        
+        def verify():
+            expected_hash = hash_entry.get().strip()
+            if not expected_hash:
+                messagebox.showwarning("Input Error", "Please enter expected hash")
+                return
+            
+            try:
+                from src.utils import verify_file_integrity
+                
+                is_valid = verify_file_integrity(file_path, expected_hash, hash_algo.get())
+                
+                if is_valid:
+                    messagebox.showinfo("✅ Verification Passed",
+                                      "File integrity verified!\n\nThe file has not been tampered with.")
+                    self.logger.success("File integrity verification passed")
+                else:
+                    messagebox.showwarning("❌ Verification Failed",
+                                         "File integrity check failed!\n\nThe file may have been tampered with.")
+                    self.logger.warning("File integrity verification failed")
+                
+                window.destroy()
+            
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+        
+        ModernButton(window, text="🔍 Verify", bg="#4CAF50",
+                    command=verify).pack(pady=20)
+    
+    def _handle_show_docs(self):
+        """Show documentation"""
+        docs_path = os.path.join(os.path.dirname(__file__), '..', 'docs', 'USAGE.md')
+        
+        if os.path.exists(docs_path):
+            window = tk.Toplevel(self.root)
+            window.title("Documentation")
+            window.geometry("800x600")
+            window.configure(bg="white")
+            
+            text_widget = scrolledtext.ScrolledText(window, font=("Courier", 10),
+                                                   wrap=tk.WORD)
+            text_widget.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+            
+            with open(docs_path, 'r') as f:
+                text_widget.insert("1.0", f.read())
+            
+            text_widget.config(state=tk.DISABLED)
+        else:
+            messagebox.showinfo("Documentation",
+                              "Documentation not found.\n\n"
+                              "Please refer to the GitHub repository for usage instructions.")
+    
+    def _handle_about(self):
+        """Show about dialog"""
+        about_text = """
+🔐 Secure CipherStegno Tool
+Professional Edition v3.1.0
+
+Advanced cryptography and steganography toolkit
+for secure communication and data hiding.
+
+Features:
+
+Cryptography:
+• Classical: Caesar, Vigenère, Playfair, Rail Fence
+• Modern Symmetric: AES-256, Blowfish, 3DES, ChaCha20
+• Asymmetric: RSA (2048/4096 bit)
+
+Steganography:
+• Image steganography (PNG, BMP)
+• Audio steganography (WAV)
+• Video steganography (MP4, AVI)
+• Compression support
+
+Security Tools:
+• Password generator & validator
+• File hash calculator (MD5, SHA-1, SHA-256, SHA-512)
+• File integrity verification
+• Key management system
+
+Developed by: Parth Thakar
+© 2025 All Rights Reserved
+
+License: MIT
+Platform: Cross-platform (Windows, Linux, macOS)
+
+This is a privacy-first, local-only security tool.
+No data is ever sent to external servers.
+        """
+        
+        messagebox.showinfo("About Secure CipherStegno Tool", about_text)
+
+
+def main():
+    """Main entry point for GUI application"""
+    root = tk.Tk()
+    app = SecureCipherStegnoApp(root)
+    root.mainloop()
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\n👋 Goodbye!")
+        sys.exit(0)
+    except Exception as e:
+        print(f"\n❌ Error: {e}", file=sys.stderr)
+        sys.exit(1)
