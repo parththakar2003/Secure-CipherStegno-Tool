@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Unified Launcher for Secure CipherStegno Tool
-Launch GUI, CLI, or Web interface
+Launch GUI or CLI interface
 """
 
 import sys
@@ -22,72 +22,46 @@ Interface Options:
   gui         Launch graphical user interface (Tkinter)
   cli         Launch command-line interface with arguments
   interactive Launch interactive CLI with menus
-  web         Launch web interface (FastAPI server)
 
 Examples:
   python launch.py gui                    # Start GUI
   python launch.py interactive            # Start interactive CLI
-  python launch.py web                    # Start web server on http://localhost:8000
-  python launch.py web --port 5000        # Start web server on custom port
   python launch.py cli --help             # Show CLI options
         """
     )
-    
+
     parser.add_argument(
         'interface',
-        choices=['gui', 'cli', 'interactive', 'web'],
+        choices=['gui', 'cli', 'interactive'],
         help='Interface to launch'
     )
-    
-    # Web-specific options
-    parser.add_argument(
-        '--host',
-        default='0.0.0.0',
-        help='Host for web server (default: 0.0.0.0)'
-    )
-    
-    parser.add_argument(
-        '--port',
-        type=int,
-        default=8000,
-        help='Port for web server (default: 8000)'
-    )
-    
+
     # Parse known args to allow passing through to subcommands
     args, remaining = parser.parse_known_args()
-    
+
     # Get the repository root directory (parent of apps/)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.dirname(script_dir)
     os.chdir(repo_root)
-    
+
     # Add apps directory to path for imports
     sys.path.insert(0, os.path.join(repo_root, 'apps'))
-    
+
     if args.interface == 'gui':
         print("🖥️  Launching GUI interface...")
         import app
         app.main()
-    
+
     elif args.interface == 'cli':
         print("💻 Launching CLI interface...")
         sys.argv = ['cli.py'] + remaining
         import cli
         cli.main()
-    
+
     elif args.interface == 'interactive':
         print("✨ Launching Interactive CLI...")
         import interactive_cli
         interactive_cli.main()
-    
-    elif args.interface == 'web':
-        print(f"🌐 Launching Web interface...")
-        print(f"   Server: http://{args.host}:{args.port}")
-        print(f"   Documentation: http://{args.host}:{args.port}/api/docs")
-        print(f"   Press Ctrl+C to stop")
-        
-        from src.web.api import run_server
-        run_server(host=args.host, port=args.port)
 
 if __name__ == "__main__":
     try:
